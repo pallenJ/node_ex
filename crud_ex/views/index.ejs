@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src = 'https://code.jquery.com/jquery-1.12.4.js'></script>    
+    <!-- 합쳐지고 최소화된 최신 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <!-- 부가적인 테마 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+    <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <title>Phone Book</title>
+
+</head>
+<body>
+    <div class="container">
+        <div align='center'>
+            <h1> Phone Book </h1>
+        </div>
+        <hr>
+        <div class="card border col-sm-4">
+            <div class="form-group">
+                <label for="input_name">Name</label>
+                <input type="text" class="form-control" id="input_name" name = "name" required>
+              </div>
+              <div class="form-group">
+                <label for="phone_num">Phone</label>
+                <input type="tel" class="form-control" id="phone_num" name = "phone" required>
+              </div>
+              <div class="form-group">
+                <label for = "comment">Comment</label>
+                <textarea name="comment" id="comment" cols="45" class="form-control"></textarea>
+              </div>
+
+              <button type="button" id = "submit_btn" class="btn btn-primary">Submit</button>
+        </div>
+
+        <table class="table table-responsive table-hover">
+          <thead>
+            <tr>
+              <th>no</th>
+              <th>name</th>
+              <th>phone</th>
+              <th>comment</th>
+              <th style="width: 100px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+              <% phone_list.forEach(phone_data=>{%>
+                <tr>
+                    <td class="phone_no"> <%=phone_data.no %> </td>
+                    <td class="phone_name"> <%=phone_data.name %> </td>
+                    <td class="phone_num"> <%=phone_data.phone %> </td>
+                    <td class="phone_comment"> <%=phone_data.comment %> </td>
+                    <td align="right">
+                       <button class="phone_delete" class="btn" type="button">
+                           <span class="glyphicon glyphicon-remove text-danger"></span></td>
+                       </button> 
+                </tr>
+              <%})%>
+          </tbody>
+        </table>
+
+    </div>
+</body>
+<script>
+    $(function () {
+        let new_no = Number('<%=next_no %>');
+        
+        function addData(input_name,phone_num,comment){
+
+
+            if(input_name ==''||input_name==null||phone_num==''||phone_num==null){
+                alert('이름과 전화번호를 확인해 주세요')
+            }
+
+            let trText = '<tr>'+
+                '<td>'+new_no+
+                '<td>'+input_name+
+                '<td>'+phone_num+
+                '<td>'+comment+
+                '<td align="right">'+
+                       '<button class="phone_delete" class="btn" type="button">'+
+                       '<span class="glyphicon glyphicon-remove text-danger"></span></td>'+
+                       '</button>'    
+                ;
+            $('tbody').append(trText)
+            new_no++;
+        }
+
+        $('#submit_btn').click(function(){
+            let input_name = $('#input_name').val();
+            let phone_num  = $('#phone_num').val();
+            let comment    = $('#comment').val();
+
+            $.ajax({
+                type : 'post',
+                //async:false,
+                url : '/',
+                data : {
+                    name   :input_name,
+                    phone  :phone_num,
+                    comment:comment
+                },
+                dataType : 'json',
+                error: function(xhr, status, error){
+                    alert(error);
+                },
+                success : function(data){
+                    addData(input_name,phone_num,comment);
+                },
+            });
+        });
+
+        $('.phone_delete').click(function () {
+            if(!confirm('정말 삭제하시겠습니까?')) return;
+            let phone_no = Number($(this).parent().parent().children('.phone_no').text());
+
+            $.ajax({
+                type : 'delete',
+                //async:false,
+                url : '/'+phone_no,
+                dataType : 'json',
+                error: function(xhr, status, error){
+                    alert(error);
+                },
+                success : function(data){
+                    alert('삭제되었습니다.')
+                },
+            });
+
+            $(this).parent().parent().hide();
+        });
+    });
+
+</script>
+</html>
