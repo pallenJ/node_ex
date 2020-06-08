@@ -1,15 +1,15 @@
-module.exports = (sequelize, DataType) =>{
+module.exports = (sequelize, DataTypes) => {
     return sequelize.define('comment', {
-        comment:{
-            type: DataType.STRING(100),
-            allowNull: false,
-        },
-        create_at:{
-            type: DataType.DATE,
-            allowNull: true,
-            defaultValue: DataType.NOW,
-        },
-    },{
-        timestamps: false,
+      comment: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
+      created_at: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: sequelize.literal('now()'),
+      },
+    }, {
+      timestamps: false,
     });
-}
+  };

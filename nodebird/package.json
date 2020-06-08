@@ -1,0 +1,16 @@
+{
+    "name": "nodebird",
+    "version": "0.0.1",
+    "description": " express sns 서비스",
+    "main": "app.js",
+    "scripts": {
+        "start": "nodemon app"
+    },
+    "author": "pallenJ",
+    "license": "pallenJ",
+    "dependencies": {
+        "mysql2": "^2.1.0",
+        "nodemon": "^2.0.4",
+        "sequelize": "^5.21.12"
+    }
+}
