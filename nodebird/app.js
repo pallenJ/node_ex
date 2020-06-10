@@ -1,16 +1,21 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
-const path = require('path');
-const session = require('express-session');
-const flash = require('connect-flash');
+const morgan       = require('morgan');
+const path         = require('path');
+const session      = require('express-session');
+const flash        = require('connect-flash');
+const passport     = require('passport');
+
 require('dotenv').config();
 
-const pageRouter = require('./routes/page');
-const { sequelize } = require('./models');
+const pageRouter      = require('./routes/page');
+const authRouter      = require('./routes/auth');
+const { sequelize }   = require('./models');
+const passportConfig  = require('./passport');
 
 const app = express();
 sequelize.sync();
+passportConfig(passport);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -30,9 +35,13 @@ app.use(session({
     secure: false,
   },
 }));
+
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', pageRouter);
+app.use('/auth', authRouter);
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');
@@ -43,6 +52,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
+  console.error(err);
   res.status(err.status || 500);
   res.render('error');
 });
