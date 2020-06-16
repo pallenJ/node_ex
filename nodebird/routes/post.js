@@ -27,7 +27,8 @@ const upload = multer({
             cb(null,'uploads/')
         },
         filename(req,file,cb){
-            const ex = path.extname(file.originalname);
+            const ext = path.extname(file.originalname);
+            console.log('PATH:'+path.basename(file.originalname,ext) + Date.now() + ext);
             cb(null,path.basename(file.originalname,ext) + Date.now() + ext);
         },
     }),
@@ -37,7 +38,7 @@ const upload = multer({
 //upload.single은 이미지 하나는 req.file, 나머지는 req.body로 처리
 router.post('/img', isLoggedIn,upload.single('img'),(req,res)=>{
     console.log(req.file);
-    res.json({url:`.img/${req.file.filename}`});
+    res.json({url:`/img/${req.file.filename}`});
 });
 
 const upload2 = multer();
@@ -65,6 +66,30 @@ router.post('/', isLoggedIn, upload2.none(), async(req,res,next)=>{
     }
 });
 
-module.exports = router;
+//실제 서버 운영시는 AWS S3난 클라우드 스토리지 같은 정적 파일 제공 서비스를 쓰는게 좋음
 
-//실제 서버 운영시는 AWS S3난 클라우드 스토리지 가튼 정적 파일 제공 서비스를 쓰는게 좋음
+router.get('/hashtag', async (req,res,next)=>{
+    const query = req.query.hashtag;
+    if(query){
+        return res.redirect('/');
+    }
+    try {
+        const hashtag = await Hashtag.fineOne({where:{title: query} });
+        let posts = [];
+        if(hashtag){
+            posts = await hashtag.getPosts({include:[{ model:User }]});
+        }
+        return res.render('main',{
+            title : `${query}|Nodebird`,
+            user : req.user,
+            twits : posts,
+        });
+
+    } catch (error) {
+        console.error(error);
+        return next(error);
+    }
+
+});
+
+module.exports = router;
