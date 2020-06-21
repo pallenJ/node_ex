@@ -13,7 +13,10 @@ module.exports = (sequelize, DataTypes) => {
             type:DataTypes.STRING(100),
             allowNull:false,
         },
-
+        admin:{
+            type:DataTypes.BOOLEAN,
+            allowNull:false
+        }
     }, {
         timestamps: true,//createAt, updateAt 
         paranoid:true,//deleteAt 

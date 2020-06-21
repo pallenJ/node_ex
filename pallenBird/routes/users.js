@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const { User,Articles } = require('../models');
+const {User} = require('../models');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -48,12 +48,15 @@ router.post('/login',async(req,res,next)=>{
 
       const rs = await bcrypt.compare(password,result.password)
       console.log(`rs:${rs}`);
-      req.session.loginInfo = {id:result.id,email};
+      if(rs){
+        req.session.loginInfo = {id:result.id,email,admin:result.admin};
+      }
       jsonData = {result : rs?'success':'fail', login:req.session.loginInfo};
     }
         res.send(jsonData)
     
 })
+
 
 
 module.exports = router;
