@@ -36,35 +36,24 @@ router.post('/login',async(req,res,next)=>{
   const result = await User.findOne({
     where: {email:email}
   })
-    const loginEmail = req.session.loginEmail;
-    if(loginEmail){
-      delete req.session.loginEmail;
-      console.log(`${loginEmail} logout`);
-      res.send({logout:loginEmail});
+  let loginInfo = req.session.loginInfo;
+  let jsonData = {};
+    if(loginInfo){
+      delete req.session.loginInfo;
+      console.log(`${loginInfo.email} logout`);
+      jsonData = {logout:loginInfo};
     }else if(!result) {
-      res.send({message:'not exist user'})
+      jsonData = {message:'not exist user'};
     }else{
 
       const rs = await bcrypt.compare(password,result.password)
       console.log(`rs:${rs}`);
-      req.session.loginEmail = email;
-      res.send({
-        result : rs?'success':'fail'
-      })
+      req.session.loginInfo = {id:result.id,email};
+      jsonData = {result : rs?'success':'fail', login:req.session.loginInfo};
     }
+        res.send(jsonData)
     
 })
 
-router.post('/pwTest',async(req, res, next)=>{
-  const {pw1,pw2} = req.body;
-  const hash1 = await bcrypt.hash(pw1,await bcrypt.genSalt());
-  const rs = await bcrypt.compare(pw2,hash1);
-
-  console.log(req.body);
-  
-  res.send({
-    pw1,pw2,hash1, rs 
-  })
-});
 
 module.exports = router;
