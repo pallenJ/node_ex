@@ -15,9 +15,9 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.User = require('./user')(sequelize,Sequelize);
-db.Articles = require('./article')(sequelize,Sequelize);
+db.Article = require('./article')(sequelize,Sequelize);
 
-db.User.hasMany(db.Articles);
-db.Articles.belongsTo(db.User);
+db.User.hasMany(db.Article);
+db.Article.belongsTo(db.User);
 
 module.exports = db;
