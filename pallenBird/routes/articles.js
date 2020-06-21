@@ -83,7 +83,7 @@ router.delete('/:id',async(req,res,next)=>{
         jsonData={message:'article is not exist'};
     }else if(loginInfo&&loginInfo.id == article_data.userId){
         //수정내용이 없을시 기존내용입력
-        await Article.destroy({
+        await Article.destro2y({
             where :{id:articleId}
         });
         jsonData={delete:`article ${articleId} delete success`};
