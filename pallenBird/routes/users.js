@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const bcrypt = require("bcrypt");
 const { User,Articles } = require('../models');
 
@@ -11,6 +11,12 @@ router.get('/', function(req, res, next) {
 router.post('/register',async(req,res,next)=>{
   const {email,nick,password} = req.body;
   const pw_hash = await bcrypt.hash(password, await bcrypt.genSalt());
+  
+  const loginEmail = req.session.loginEmail;
+  if(loginEmail){
+    delete req.session.loginEmail;
+    console.log(`${loginEmail} logout`);
+  }//추후 이부분은 get으로 옮길것
 
   const user_data = await User.create({
     email,nick,password: pw_hash
@@ -20,18 +26,33 @@ router.post('/register',async(req,res,next)=>{
 
 });
 
+router.get('/login',(req,res)=>{
+   const email= req.session.loginEmail
+   res.send({email})
+});
+
 router.post('/login',async(req,res,next)=>{
   const {email, password} = req.body;
   const result = await User.findOne({
     where: {email:email}
   })
-    if(!result) return;
-    const rs = await bcrypt.compare(password,result.password)
-    console.log(`rs:${rs}`);
+    const loginEmail = req.session.loginEmail;
+    if(loginEmail){
+      delete req.session.loginEmail;
+      console.log(`${loginEmail} logout`);
+      res.send({logout:loginEmail});
+    }else if(!result) {
+      res.send({message:'not exist user'})
+    }else{
 
-    res.send({
-      result : rs?'success':'fail'
-  })
+      const rs = await bcrypt.compare(password,result.password)
+      console.log(`rs:${rs}`);
+      req.session.loginEmail = email;
+      res.send({
+        result : rs?'success':'fail'
+      })
+    }
+    
 })
 
 router.post('/pwTest',async(req, res, next)=>{
