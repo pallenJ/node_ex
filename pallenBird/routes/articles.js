@@ -33,6 +33,9 @@ router.post('/add', async(req,res,next)=>{
 router.get('/:id',async(req,res,next)=>{
     const articleId = req.params.id;
     const article_data = await Article.findOne({
+        include:{
+            model:User
+        },
         where:{
             id:articleId
         }
