@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require("bcrypt");
 const {User,Article} = require('../models');
-
-
+//const multer = require('multer');
+/*
+let uploads = multer({
+    dest:'upload'
+});
+*/
 router.get('/', async(req,res,next)=>{
     const article_list = await Article.findAll(
         {
@@ -15,7 +18,7 @@ router.get('/', async(req,res,next)=>{
 });
 
 //Create
-router.post('/add', async(req,res,next)=>{
+router.post('/add',async(req,res,next)=>{
     let jsonData = {};
     const loginInfo = req.session.loginInfo;
     if(loginInfo){
@@ -24,7 +27,7 @@ router.post('/add', async(req,res,next)=>{
         Article.create({
             board,title,content,userId:loginInfo.id
         })
-        jsonData = {board,title,content,userId:loginInfo.id};
+        jsonData = {board,title,content,userId:loginInfo.id,img:req.files};
     }
     res.send(jsonData);
 });
@@ -94,4 +97,4 @@ router.delete('/:id',async(req,res,next)=>{
     res.json(jsonData)
 });
 
-module.exports = router;
+module.exports = router; 

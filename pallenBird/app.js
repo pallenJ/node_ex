@@ -33,6 +33,10 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/articles', articlesRouter);
 
+app.use('/jquery',express.static(path.join(__dirname,'/node_modules/jquery')))
+app.use('/bootstrap/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
+app.use('/bootstrap/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
