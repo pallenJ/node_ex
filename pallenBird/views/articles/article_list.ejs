@@ -1,0 +1,26 @@
+<table class="table table-hover">
+    <thead class="table-dark" align="center">
+        <tr>
+            <th>no</th>
+            <th>제목</th>
+            <th>글쓴이</th>
+            <th>글쓴일짜</th>
+            <th>수정일</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%
+        article_list.forEach(article=>{
+        %>
+        <tr>
+            <td scope="row"> <%=article.id %> </td>
+            <td>   <b style="color: brown;">[<%=article.board %>]</b> <%=article.title %>
+            <%if(article.createdAt!=article.updatedAt){ %><small class="text-secondary"> (수정) </small><%}%>
+            </td>
+            <td>   <%=article.user.nick %></td>
+            <td>   <%=article.createdAt %></td>
+            <td>   <%=article.updatedAt %></td>
+        </tr>
+        <%
+    })
+        %>

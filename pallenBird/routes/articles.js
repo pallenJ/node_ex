@@ -8,13 +8,19 @@ let uploads = multer({
 });
 */
 router.get('/', async(req,res,next)=>{
+    let page = req.param('pg');
+    console.log(page);
+    if(page==undefined||page<=0) page =1;
     const article_list = await Article.findAll(
         {
             include: {
-                model:User
-            }
+                model:User,
+                
+            },
+            offset:(page-1)*9,
+            limit:9
         });
-        res.send(article_list);
+        res.render('articles/article_list',{article_list});
 });
 
 //Create

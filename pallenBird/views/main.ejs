@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta name="Description" content="Enter your description here"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -36,37 +39,70 @@
           </div>
         </div>
 
+        <div id = "article_list">
 
-        <table class="table table-hover">
-            <thead class="table-dark" align="center">
-                <tr>
-                    <th>no</th>
-                    <th>제목</th>
-                    <th>글쓴이</th>
-                    <th>글쓴일짜</th>
-                    <th>수정일</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td scope="row"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td scope="row"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+        </div>
+        <div align='center'>
+
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" role = "0">Prev</a></li>
+                    <li class="page-item active"><a class="page-link" role = "1">1</a></li>
+                    <li class="page-item"><a class="page-link" role = "2">2</a></li>
+                    <li class="page-item"><a class="page-link" role = "3">3</a></li>
+                    <li class="page-item"><a class="page-link" role = "4">4</a></li>
+                    <li class="page-item"><a class="page-link" role = "5">5</a></li>
+                    <li class="page-item"><a class="page-link" role =  "6">Next</a></li>
+                </ul>
+         </nav>
+      </div>
+        
+        
       </div>
        <%include ./modal/index%>
+       <script>
+           $(()=>{
+            let pg = 1;
+            $('#article_list').load(`/articles?pg=${pg}`);
+            //jquery 의 경우 람다식을 쓰면 일부기능이 잘 돌아가지 않을 수 있음
+            $('.page-link').click(function(){
+                //alert($(this).text())
+                pg= $(this).attr('role')
+                setPage();
+            });
+            function setPage() {
+                let list_num = parseInt(((pg-1)/5))*5
+                let prev_num = list_num;
+                let next_num = prev_num+6;
+                $('.page-link').each(function(){
+                    
+                    console.log($(this).text()=='Prev'||$(this).text()=='Next')
+                    if($(this).text()=='Prev') {
+                        $(this).attr('role',prev_num);
+                        return;
+                    }else if($(this).text()=='Next'){
+                        $(this).attr('role',next_num);
+                        return;
+                    }
+                    $(this).text(++list_num);
+                    $(this).attr('role',list_num);
+                    if($(this).attr('role')==pg){
+                        $(this).parent().addClass('active');
+                    }else{
+                        $(this).parent().removeClass('active')
+                    }
+
+                })
+                $('#article_list').load(`/articles?pg=${pg}`);
+                
+
+            }
+        })
+    </script>       
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script>
+
+
+
 </body>
 </html>
