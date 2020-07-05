@@ -9,8 +9,8 @@
 <span aria-hidden="true">&times;</span>
 </button>
 </div>
-<div class="modal-body">
-...
+<div class="modal-body" id = "article_add">
+
 </div>
 <div class="modal-footer">
 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -20,3 +20,9 @@
 </div>
 </div>
 
+<script>
+
+$(()=>{
+    $('#article_add').load('/articles/add')
+});
+</script>

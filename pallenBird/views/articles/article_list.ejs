@@ -12,7 +12,7 @@
         <%
         article_list.forEach(article=>{
         %>
-        <tr>
+        <tr class = 'articleData' role = '<%=article.id %>'>
             <td scope="row"> <%=article.id %> </td>
             <td>   <b style="color: brown;">[<%=article.board %>]</b> <%=article.title %>
             <%if(article.createdAt!=article.updatedAt){ %><small class="text-secondary"> (수정) </small><%}%>
@@ -24,3 +24,16 @@
         <%
     })
         %>
+        <%include ../modal/articles/article_detail%>    
+<script>
+
+    $(()=>{
+        $('.articleData').click(function(){
+            const id = $(this).attr('role');
+            $('#article_content').load(`/articles/${id}`);
+            $('#article_detail').modal();
+        });
+    })
+
+</script>
+        

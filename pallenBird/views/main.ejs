@@ -64,6 +64,7 @@
            $(()=>{
             let pg = 1;
             $('#article_list').load(`/articles?pg=${pg}`);
+            //$('#article_add').load('/articles/article_add')
             //jquery 의 경우 람다식을 쓰면 일부기능이 잘 돌아가지 않을 수 있음
             $('.page-link').click(function(){
                 //alert($(this).text())
@@ -97,6 +98,7 @@
                 
 
             }
+            
         })
     </script>       
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>

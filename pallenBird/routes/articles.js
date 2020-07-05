@@ -23,6 +23,9 @@ router.get('/', async(req,res,next)=>{
         res.render('articles/article_list',{article_list});
 });
 
+router.get('/add', (req,res,next)=>{
+    res.render('articles/article_add');
+})
 //Create
 router.post('/add',async(req,res,next)=>{
     let jsonData = {};
@@ -43,13 +46,13 @@ router.get('/:id',async(req,res,next)=>{
     const articleId = req.params.id;
     const article_data = await Article.findOne({
         include:{
-            model:User
+            model:User 
         },
         where:{
             id:articleId
         }
     }); 
-    res.send(article_data);
+    res.render('articles/article_detail',{article_data});
 });
 
 //Update
