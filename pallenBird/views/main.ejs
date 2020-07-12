@@ -22,10 +22,10 @@
 
 
             <div align = right>
-                <button type="button" name="commit" class="btn btn-success btn-sm" data-toggle="modal" data-target="#writeModal">
+                <button type="button" name="brd_add" class="btn btn-success btn-sm" data-toggle="modal" data-target="#writeModal">
                     <i class="fa fa-pencil" aria-hidden="true"> write</i>
                 </button>
-                <button type="button" name="commit" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#login">
+                <button type="button" name="commit" class="btn btn-outline-primary btn-sm" id="login_btn">
                     Login/Signup
                 </button>
 
@@ -98,7 +98,13 @@
                 
 
             }
-            
+            $("#login_btn").click(function () {
+                
+                //alert($(this).attr('data-target'))
+                alert(JSON.stringify(sessionStorage));
+                
+                $('#login').modal();
+            })
         })
     </script>       
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>

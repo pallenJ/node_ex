@@ -53,8 +53,8 @@ router.post('/login',async(req,res,next)=>{
       }
       jsonData = {result : rs?'success':'fail', login:req.session.loginInfo};
     }
-        res.send(jsonData)
-    
+      //res.send(jsonData)
+      res.redirect('/');
 })
 
 

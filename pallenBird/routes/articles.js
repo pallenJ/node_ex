@@ -17,8 +17,9 @@ router.get('/', async(req,res,next)=>{
                 model:User,
                 
             },
+            order:[['no','DESC']],
+            limit:9,
             offset:(page-1)*9,
-            limit:9
         });
         res.render('articles/article_list',{article_list});
 });
