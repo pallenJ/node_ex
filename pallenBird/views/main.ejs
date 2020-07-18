@@ -6,20 +6,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta name="Description" content="Enter your description here"/>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <title>Title</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </head>
 <body>
-
+    
     <div class="container justify-content-lg-center">
         <div> <p class="h3"> SIMPLE BRD </p></div>
- 
-        <div class="row">
+        <%if(loginInfo){%>
+            <p class="h5 text-info">
 
+                <%=
+                loginInfo.nick
+                %>
+            </p>
+        <%}%>
+        <div class="row">
+            
 
             <div align = right>
                 <button type="button" name="brd_add" class="btn btn-success btn-sm" data-toggle="modal" data-target="#writeModal">
@@ -62,6 +72,8 @@
        <%include ./modal/index%>
        <script>
            $(()=>{
+
+            const login = '<%=loginInfo%>'!='';
             let pg = 1;
             $('#article_list').load(`/articles?pg=${pg}`);
             //$('#article_add').load('/articles/article_add')
@@ -101,14 +113,16 @@
             $("#login_btn").click(function () {
                 
                 //alert($(this).attr('data-target'))
-                alert(JSON.stringify(sessionStorage));
                 
-                $('#login').modal();
+                if(!login){
+                    $('#login').modal();
+                }else if(confirm('정말 로그아웃 하시겠습니까?')){
+                    location.href = '/users/logout'
+                }
             })
         })
     </script>       
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script>
 
 
 

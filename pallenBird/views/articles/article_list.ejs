@@ -15,7 +15,12 @@
         <tr class = 'articleData' role = '<%=article.id %>'>
             <td scope="row"> <%=article.id %> </td>
             <td>   <b style="color: brown;">[<%=article.board %>]</b> <%=article.title %>
-            <%if(article.createdAt!=article.updatedAt){ %><small class="text-secondary"> (수정) </small><%}%>
+            <%if(article.createdAt!=article.updatedAt){ %>
+                    <small class="text-info">(수정)</small>
+                
+                
+                    
+            <%}%>
             </td>
             <td>   <%=article.user.nick %></td>
             <td>   <%=article.createdAt %></td>

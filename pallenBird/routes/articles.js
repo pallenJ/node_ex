@@ -17,7 +17,7 @@ router.get('/', async(req,res,next)=>{
                 model:User,
                 
             },
-            order:[['no','DESC']],
+            order:[['id','DESC']],
             limit:9,
             offset:(page-1)*9,
         });
