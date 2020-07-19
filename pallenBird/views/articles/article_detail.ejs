@@ -52,6 +52,22 @@
             let action_url ='/articles/edit/'+Number($.cookie('article_no'));
             $('#article_edit').load(action_url);
         })
+        $('#article_delete').click(function() {
+            if(!confirm('정말 삭제 하시겠습니까?')) return;
 
+            $.ajax({
+                contentType: "application/json; charset=UTF-8",
+                type: "DELETE",
+                url: "/articles/"+Number($.cookie('article_no')),
+            success: function (response) {
+                alert('삭제 되었습니다');
+                location.reload();
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                // log the error to the console
+                console.log("The following error occured: " + textStatus, errorThrown);
+            }
+        });
+        })
     })
 </script>
