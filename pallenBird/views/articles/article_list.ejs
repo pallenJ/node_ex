@@ -37,6 +37,7 @@
             const id = $(this).attr('role');
             $('#article_content').load(`/articles/${id}`);
             $('#article_detail').modal();
+            $.cookie('article_no',id);
         });
     })
 

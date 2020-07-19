@@ -1,29 +1,57 @@
 
-<form action="/articles/<%=article_data.id%>" method="patch">
 
     <div class="modal-header">
         <p class="modal-title h5" id="title"><b style="color: brown;">[<%=article_data.board %>]</b> 
         <%=article_data.title %> &nbsp;&nbsp;&nbsp;
         
     </p>
+
+
+
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
 <div class="modal-body">
-    
     <div class="form-group">
-        <p class="small text-primary">writer: <%=article_data.user.nick %></p>
-        <div align = 'right' id ='edit_btn'> <a class="btn btn-outline-dark btn-sm">edit</a> </div>
-        <textarea class="form-control" readonly> <%=article_data.content %></textarea><br>      
+
+      
+        <div class="small text-primary form-inline">writer: <%=article_data.user.nick %></div>
+        
+
+        <br>
+        <div class="form-control border-dark">
+            <textarea  cols="60" rows="auto" class="border-white" readonly><%=article_data.content %></textarea>     
+        </div>
+        <br>      
         <small class="text-secondary"> 작성일: <%=article_data.createdAt %></small><br>
         <small class="text-secondary"> 수정일: <%=article_data.updatedAt %> </small>
     </div>
 </div>
 
 <div class="modal-footer">
+    <%if  (loginInfo && article_data.user.email ==loginInfo.email){%>
+            <!-- <a class="btn btn-outline-dark btn-sm">edit</a>  -->
+            <div class="dropdown">
+            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="editMyArticle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-edit">edit</i>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="editMyArticle">
+            <a class="dropdown-item text-primary" href="#" id = "article_edit_btn" data-dismiss="modal" data-toggle="modal" data-target="#editModal"> <i class="fas fa-user-edit"> edit</i></a>
+            <a class="dropdown-item text-danger" href="#" id = "article_delete"> <i class="fa fa-trash-o" aria-hidden="true"> delete</i></a>
+            </div>
+            </div>
+        <%}%>
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    <button type="button" class="btn btn-Close" id='save_btn' hidden>Save changes</button>
 </div>
-</form>
-    
+
+<script>
+    $(()=>{
+        
+        $('#article_edit_btn').click(function(){
+            let action_url ='/articles/edit/'+Number($.cookie('article_no'));
+            $('#article_edit').load(action_url);
+        })
+
+    })
+</script>
