@@ -10,7 +10,6 @@ let uploads = multer({
 router.get('/', async(req,res,next)=>{
     let page = req.param('pg');
     console.log(page);
-    if(page==undefined||page<=0) page =1;
     res.cookie('pg',page)
     const article_list = await Article.findAll(
         {

@@ -6,38 +6,43 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body">
+          
+          <form action="/users/register" method="post" id ="signUp_form">
           <div class="input-group mb-3">
               <span class="input-group-text input-group-prepend" id="inputGroup-sizing-sm">
                 <i class="fa fa-user fa-lg"></i>
               </span>
-            <input type="text" class="form-control" placeholder="Name" aria-label="Name" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" placeholder="Nick" aria-label="Nick" aria-describedby="basic-addon1" name ="nick" id = "nick">
           </div>
           <div class="input-group mb-3">
               <span class="input-group-text input-group-prepend" id="inputGroup-sizing-sm">
                 <i class="fa fa-envelope"></i>
               </span>
-            <input type="text" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name = "email" id ="email">
             <div class="input-group-prepend">
               <button class="input-group-text" id="inputGroup-sizing-sm">
                 check
               </button>
             </div>
           </div>
+
           <div class="input-group mb-3">
               <span class="input-group-text input-group-prepend" id="inputGroup-sizing-sm">
                 <i class="fa fa-lock fa-lg"></i>
               </span>
-            <input type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1">
+            <input type="password" class="form-control pw-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" name="password" id="pw">
           </div>
           <div class="input-group mb-3">
               <span class="input-group-text input-group-prepend" id="inputGroup-sizing-sm">
                 <i class="fa fa-lock fa-lg"></i>
               </span>
-            <input type="text" class="form-control" placeholder="Password confirmation" aria-label="Password confirmation" aria-describedby="basic-addon1">
+            <input type="password" class="form-control pw-control" placeholder="Password confirmation" aria-label="Password confirmation" aria-describedby="basic-addon1" id = "pwCheck">
           </div>
-          <button type="submit" name="commit" class="btn btn-primary btn-lg btn-block">
+          <button type="button" name="commit" id ="signUp" class="btn btn-primary btn-lg btn-block">
             <span>Signup <i class="fa fa-sign-in"></i></span>
           </button>
+        </form>
+
           <div class="text-center">
             <a class="" href="" data-dismiss="modal" data-toggle="modal" data-target="#login">Login</a>
           </div>
@@ -45,3 +50,71 @@
       </div>
     </div>
   </div>
+
+
+  <script>
+
+    $(()=>{
+      
+      let nick_flag = false;
+      let email_flag = false;
+      let email_flag2 = false;
+      let email_flag3 = false;
+      let pw_flag = false;
+
+
+      const emailExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+
+
+      $("#signUp").click(function(){
+        if(!nick_flag){
+          alert('닉네임을 입력해 주세요');
+          return;
+        }
+        else if(!email_flag){
+          alert('이메일을 입력해 주세요');
+          return;
+        }else if(!email_flag2){
+          alert('이메일을 형식이 잘못되었습니다');
+          return;
+        }else if(!email_flag3){
+          alert('이미 사용중인 이메일 입니다');
+          return;
+        }else if(!pw_flag){
+          alert('패스워드를 확인해 주세요')
+          return;
+        }
+
+        $("#signUp_form").submit();
+      });
+
+      $("#nick").keyup(function(){
+        nick_flag = $(this).val()!=null&&$(this).val()!='';
+      })
+
+      $("#email").keyup(function(){
+        email_flag = $(this).val()!=null&&$(this).val()!='';
+        email_flag2 = emailExp.test($(this).val());
+        email_flag3 = emailExist($(this).val());
+      })
+
+      $('.pw-control').keyup(function(){
+        pw_flag = $("#pw").val()==$("#pwCheck").val();
+        isValid(pw_flag,$('.pw-control'));
+      })
+
+      function isValid(flag,selector) {
+	        if(flag){
+            selector.removeClass("is-invalid")
+            selector.addClass("is-valid")
+	        }else{
+            selector.removeClass("is-valid")
+            selector.addClass("is-invalid")
+	        }
+	    }
+      function emailExist(emailParam) {
+        return true;
+      }
+    })
+
+  </script>

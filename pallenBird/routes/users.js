@@ -10,19 +10,20 @@ router.get('/', function(req, res, next) {
 
 router.post('/register',async(req,res,next)=>{
   const {email,nick,password} = req.body;
+  let admin = req.body.admin;
   const pw_hash = await bcrypt.hash(password, await bcrypt.genSalt());
-  
+  console.log({email,nick,password});
   const loginEmail = req.session.loginEmail;
   if(loginEmail){
     delete req.session.loginEmail;
     console.log(`${loginEmail} logout`);
-  }//추후 이부분은 get으로 옮길것
-
+  }
+  if(admin ==null) admin = 0;
   const user_data = await User.create({
-    email,nick,password: pw_hash
+    email,nick,password: pw_hash, admin
   })
-  res.send(user_data)
-
+  //res.send(user_data)
+  res.redirect('/');
 
 });
 
