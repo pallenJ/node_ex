@@ -4,35 +4,26 @@ import { Component } from 'react';
 class Article extends Component{
     constructor(props){
         super(props);
-        this.setArticle(props.article);
+        this.state =  this.props.article;
     }
 
-    state = {
-        bno:"0",
-        writer:"anonymous",
-        content:"",
-        added:null,
-        edited:null
-    }
-    setArticle = (params)=>{
-        this.setState({bno:0});
-    }
-    getPiece = (val)=>this.props.isHeader?<th> {val}</th>:<td>{val}</td>;
-    
+
+    getPiece = (_key,val)=>this.props.isHeader?
+    <th key={_key} className =  'text text-center'> {val}</th>:<td key={_key}>{val}</td>;
+
     render(){
-        
+
         return(
             <tr>
                 {
-                    Object.keys(this.state).forEach(_key =>{
-                    {
-                        console.log(this.state[_key] );
-                        this.getPiece(_key);
-                    }
+
+                    Object.keys(this.state).map(_key=>{
+                       return this.getPiece(_key,this.state[_key]);
                     })
+
                 }
             </tr>
-        ) 
+        )
 
     }
 
