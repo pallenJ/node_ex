@@ -1,11 +1,13 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
+import Example from './Example';
 
 function App() {
   return (
     <div>
       <Route path="/" component={test1} exact/>
       <Route path="/home" component={test2} />
+      <Route path="/example" component ={Example} />
     </div>
   );
 }
