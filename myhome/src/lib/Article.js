@@ -14,10 +14,8 @@ class Article extends Component{
         added:null,
         edited:null
     }
-    setArticle = async(params)=>{
-        await this.setState(params).
-        console.log(JSON.stringify(params));
-        console.log(JSON.stringify(this.state));
+    setArticle = (params)=>{
+        this.setState({bno:0});
     }
     getPiece = (val)=>this.props.isHeader?<th> {val}</th>:<td>{val}</td>;
     
