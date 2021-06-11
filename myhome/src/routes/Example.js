@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Route } from 'react-router-dom';
-import {Button, Col, Row, Table}from 'react-bootstrap'
-import Article from '../lib/Article';
+import {Button, FormGroup, Table}from 'react-bootstrap'
+import ArticleEX from '../lib/ArticleEX';
 import dateFormat from 'dateformat'
 const Example=({match})=>{
-    
+
     return(
     <div>
        <Route exact path={`${match.path}`} component={aaa} />
@@ -19,21 +19,21 @@ const aaa =  ()=>{
         fdsf
     </div>)
 }
-const exAuth = {canEdit:true};
 const EX1= ()=>{
     let articleData = [];
     let _cnt = 0;
     const [articles, setarticles] = useState(articleData);
     const [last, setlast] = useState(5);
     const getArticle = (_key,data,authority = {})=>{
-        
+
         return(
-            <Article key = {_key} article={
+            <ArticleEX key = {_key} article={
                 {
                     bno:`${data.bno}`,writer:`${data.writer}`,
                     content:`${data.content}`,
                     added:`${dateFormat(data.added,'yyyy-mm-dd HH:MM:ss' )}`,
-                    edited:`${dateFormat(data.edited,'yyyy-mm-dd HH:MM:ss' )}`}} isHeader = 'false' canEdit ={authority.canEdit}/>
+                    edited:`${dateFormat(data.edited,'yyyy-mm-dd HH:MM:ss' )}`}} isHeader = 'false' canEdit ={authority.canEdit}
+                    />
                     );
     }
     while(_cnt<5 ){
@@ -44,27 +44,40 @@ const EX1= ()=>{
         )
         );
         _cnt++;
-        
-        //setlast(5);
+
     }
-    
-    
+
+
     const addArticleEX = (authority)=>{
         const pairData = {bno:last,writer:`writer${last}`,content:`content${last}`,added:Date.now(),edited:Date.now()};
         const newArticle = getArticle(last,pairData,authority);
         //articleData.push(newArticle);
 
-        console.log(articles);
-        console.log(last);
         setarticles(
             articles.concat(
                 [newArticle]
             )
         );
         setlast(last+1);
-        
+        console.log('last:'+last)
     }
 
+    const deleteArticleEX = (bno) =>{
+
+        try {
+            const _selectIdx = articles.findIndex(art => parseInt(art.key) === parseInt(bno));
+            setarticles(articles.slice(0,_selectIdx).concat(articles.slice( _selectIdx+1 )) )
+        } catch (error) {
+            console.log(error);
+
+        }
+        console.log(articles[articles.length-1].key)
+        if(articles.length === 0)setlast(0);
+        else{
+            setlast(last-1);
+            console.log('last:'+last)
+        }
+    }
 
 
     return(
@@ -72,35 +85,38 @@ const EX1= ()=>{
             <Table className = 'table table-dark table-striped'>
                 <thead>
 
-                <Article article={{bno:'bno',writer:'writer',content:'content',added:'added',edited:'edited'}} isHeader = 'true'/>
+                <ArticleEX article={{bno:'bno',writer:'writer',content:'content',added:'added',edited:'edited'}} isHeader = 'true'/>
                 </thead>
                 <tbody>
 
                     {
                         articles.map(elt => elt)
                     }
-                    
+
                 </tbody>
                 <tfoot>
                     <tr color = 'white' className ='table-white'>
                         <td colSpan = '100%' align ='right'>
 
-                            <Button className ='add' variant ='success' size ='large' onClick ={()=>{addArticleEX({canEdit:true})}}> 
+                            <Button className ='add' variant ='success' size ='large' onClick ={()=>{addArticleEX({canEdit:true})}}>
                                 ADD
                             </Button>
+                            <Button className ='delete' variant ='danger' size ='large' onClick ={()=>{deleteArticleEX(last-1)}}>
+                                DELETE
+                            </Button>
 
-                            
+
                         </td>
                     </tr>
                 </tfoot>
             </Table>
-           
+
         </div>
     );
 
-   
-}
 
+}
+/*
 const EX2= ()=>{
     return(
         <div>
@@ -108,5 +124,5 @@ const EX2= ()=>{
         </div>
     );
 }
-
+ */
 export default Example;
