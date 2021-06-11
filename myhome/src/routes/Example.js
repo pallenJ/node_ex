@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { Route } from 'react-router-dom';
-import {Button, FormGroup, Table}from 'react-bootstrap'
+import {Button, Table}from 'react-bootstrap'
 import ArticleEX from '../lib/ArticleEX';
 import dateFormat from 'dateformat'
+import EX2 from './Ex2'
 const Example=({match})=>{
 
     return(
     <div>
        <Route exact path={`${match.path}`} component={aaa} />
        <Route exact path={`${match.path}/ex1`} component={EX1}/>
+       <Route exact path={`${match.path}/ex2`} component={EX2}/>
 
     </div>
     );
