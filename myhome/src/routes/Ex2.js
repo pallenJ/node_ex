@@ -1,6 +1,6 @@
 import dateFormat from 'dateformat';
 import React, { useState } from 'react';
-import { Button} from 'react-bootstrap';
+import { Button, Table} from 'react-bootstrap';
 
 const keys = ['bno','title','writer','content','added','edited'];
 
@@ -38,7 +38,9 @@ const Ex2 = ()=>{
                 added: dateFormat(Date.now(),'yyyy-mm-dd HH:MM:ss' ),
                 edited: dateFormat(Date.now(),'yyyy-mm-dd HH:MM:ss' )
             }
-        ]));
+        ])
+
+        );
         setlast(last+1)
     }
     const deleteArticle = (bno)=>{
@@ -57,14 +59,14 @@ const Ex2 = ()=>{
             setlast(parseInt(1+articleList[articleList.length-1].bno));
     }
     return(
-        <table className="table table-dark table-striped">
+        <Table striped bordered hover size='sm' variant='dark' resource responsive='sm'>
             <thead>
                 <tr>
 
                 {
                     keys.map(_val => <th key = {`header-${_val}`} className = 'text-center'>{_val}</th>)
                 }
-                <th className = 'text-center' colSpan = '200px'><Button variant = 'success' size ='xl' align ='right' onClick ={addArticle}>ADD</Button></th>
+                <th className = 'text-center' colSpan = '200px'><Button variant = 'success' size ='sm' align ='right' onClick ={addArticle}>ADD</Button></th>
                 </tr>
             </thead>
             <tbody>
@@ -74,7 +76,7 @@ const Ex2 = ()=>{
                             <tr key = {`tr-${elt.bno}`}>
                                 {keys.map(_key=><td className='text-center' key = {`td-${_key}-${elt.bno}`}>{elt[_key]}</td>)}
                                 <td className='text-center' >
-                                <Button variant = 'outline-danger' size ='xl' align ='right'
+                                <Button variant = 'outline-danger' size ='sm' align ='right'
                                 key = {`del-${elt.bno}`} onClick ={()=> deleteArticle(elt.bno)}>DELETE</Button>
                                 </td>
                             </tr>
@@ -84,7 +86,7 @@ const Ex2 = ()=>{
                     }
             </tbody>
 
-        </table>
+        </Table>
     )
 }
 

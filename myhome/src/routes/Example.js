@@ -4,11 +4,13 @@ import {Button, Table}from 'react-bootstrap'
 import ArticleEX from '../lib/ArticleEX';
 import dateFormat from 'dateformat'
 import EX2 from './Ex2'
-const Example=({match})=>{
 
+
+const Example=({match})=>{
+    console.log(match);
     return(
     <div>
-       <Route exact path={`${match.path}`} component={aaa} />
+       <Route exact path={`${match.path}`} component={EXMain} />
        <Route exact path={`${match.path}/ex1`} component={EX1}/>
        <Route exact path={`${match.path}/ex2`} component={EX2}/>
 
@@ -16,9 +18,11 @@ const Example=({match})=>{
     );
 }
 
-const aaa =  ()=>{
-    return (<div>
-        fdsf
+const EXMain  = ()=>{
+    return(<div>
+        <h1>
+            EXAMPLES!
+        </h1>
     </div>)
 }
 const EX1= ()=>{
