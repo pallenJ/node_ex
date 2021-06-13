@@ -6,7 +6,7 @@ const keys = ['bno','title','writer','content','added','edited'];
 
 const Ex2 = ()=>{
 
-    const GetSample = (len) =>{
+    const GetSample = (len:any) =>{
         let rt = [];
         for (let i = 0; i < len; i++) {
             rt.push(
@@ -43,30 +43,30 @@ const Ex2 = ()=>{
         );
         setlast(last+1)
     }
-    const deleteArticle = (bno)=>{
-        bno = parseInt(bno);
+    const deleteArticle = (bno:Number)=>{
+        //bno = parseInt(bno);
         const isLast = articleList[articleList.length-1].bno === bno;
         console.log(isLast);
         const selectIdx = articleList.findIndex(elt => elt.bno === bno)
         setarticleList(
             articleList.slice(0,selectIdx).concat(articleList.slice(selectIdx+1))
         )
-        if(parseInt(articleList.length) === 1)
+        if(articleList.length === 1)
             setlast(0);
         else if(isLast)
-            setlast(parseInt(articleList[articleList.length-1].bno));
+            setlast(articleList[articleList.length-1].bno);
         else
-            setlast(parseInt(1+articleList[articleList.length-1].bno));
+            setlast(1+articleList[articleList.length-1].bno);
     }
     return(
-        <Table striped bordered hover size='sm' variant='dark' resource responsive='sm'>
+        <Table striped bordered hover size='sm' variant='dark' responsive='sm'>
             <thead>
                 <tr>
 
                 {
                     keys.map(_val => <th key = {`header-${_val}`} className = 'text-center'>{_val}</th>)
                 }
-                <th className = 'text-center' colSpan = '200px'><Button variant = 'success' size ='sm' align ='right' onClick ={addArticle}>ADD</Button></th>
+                <th className = 'text-center'><Button variant = 'success' size ='sm' align ='right' onClick ={addArticle}>ADD</Button></th>
                 </tr>
             </thead>
             <tbody>
