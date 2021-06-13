@@ -6,7 +6,7 @@ const keys = ['bno','title','writer','content','added','edited'];
 
 const Ex2 = ()=>{
 
-    const GetSample = (len:any) =>{
+    const GetSample = (len) =>{
         let rt = [];
         for (let i = 0; i < len; i++) {
             rt.push(
@@ -74,9 +74,9 @@ const Ex2 = ()=>{
                     articleList.map(elt =>{
                         return(
                             <tr key = {`tr-${elt.bno}`}>
-                                {keys.map(_key=><td className='text-center' key = {`td-${_key}-${elt.bno}`}>{elt[_key]}</td>)}
+                                {keys.map(_key=><td className='text-center' key = {`td-${_key}-${elt.bno}`}>{elt[_key.toString()]}</td>)}
                                 <td className='text-center' >
-                                <Button variant = 'outline-danger' size ='sm' align ='right'
+                                <Button variant = 'outline-danger' size ='sm'
                                 key = {`del-${elt.bno}`} onClick ={()=> deleteArticle(elt.bno)}>DELETE</Button>
                                 </td>
                             </tr>
