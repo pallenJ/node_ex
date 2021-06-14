@@ -6,7 +6,6 @@ import logger from '@shared/Logger'; */
 const { BAD_REQUEST, CREATED, OK } = StatusCodes;
 import bcrypt from "bcrypt"
 //import logger from '@shared/Logger';
-import crypto from 'crypto'
 import logger from '@shared/Logger';
 const router = Router();
 router.get('/',async(req:Request,res:Response)=>{
@@ -16,8 +15,8 @@ router.post('/save',/* pwEncryption, */async(req:Request,res:Response)=>{
      const pwd = req.body.password;
      const salt = Math.round(new Date().valueOf() * Math.random());
      //req.body.password = bcrypt.hashSync(pwd,20);
-     if(pwd)
-     req.body.password =crypto.createHmac('sha256',`${salt}`).update(pwd).digest('hex');
+   /*   if(pwd)
+     req.body.password =crypto.createHmac('sha256',`${salt}`).update(pwd).digest('hex'); */
     
      return res.json({});
 });
