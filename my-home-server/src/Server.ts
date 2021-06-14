@@ -60,12 +60,16 @@ app.use(express.static(staticDir));
 app.get('/', (req: Request, res: Response) => {
     res.sendFile('index.html', {root: viewsDir});
 });
-mongoose.connect(`${dbInfo.mongoDBUrl}`,{
+const connect = async()=>{
+    await mongoose.connect(`${dbInfo.mongoDBUrl}`,{
+
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
-    useFindAndModify: false,
-});
-require('@daos/TestSample.dao');
+    useFindAndModify: true,
+
+})}
+connect();
+//require('@daos/TestSample.dao');
 // Export express instance
 export default app;

@@ -1,11 +1,12 @@
-import mongoose, { Schema } from "mongoose";
+import logger from "@shared/Logger";
+import mongoose, { Schema,model } from "mongoose";
 import autoIncrement from "mongoose-auto-increment"
 import dbInfo from "../../dbInfo.json"
 
-const connection = mongoose.createConnection(`${dbInfo.mongoDBUrl}/testSample?retryWrites=true&w=majority`);
-autoIncrement.initialize(connection);
+//const connection = mongoose.createConnection(`${dbInfo.mongoDBUrl}/testSample`);
+//autoIncrement.initialize(connection);
 const currentDate = new Date();
-
+logger.info('aaa')
 const TestSampleSchema = new Schema({
     writer:{type:String,required:true},
     content:{type:String, required:true},
@@ -14,5 +15,6 @@ const TestSampleSchema = new Schema({
     password:{type: String,required:true},
     salt:{type:String,default:20}
 });
-TestSampleSchema.plugin(autoIncrement.plugin,'TestSampleSchema');
-export default mongoose.model('TestSampleSchema',TestSampleSchema);
+logger.info('aaaaaa')
+// TestSampleSchema.plugin(autoIncrement.plugin,'TestSampleSchema');
+export default model<Schema>('TestSampleSchema',TestSampleSchema);
