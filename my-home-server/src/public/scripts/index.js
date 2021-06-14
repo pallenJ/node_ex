@@ -61,6 +61,23 @@ document.addEventListener('click', function (event) {
     event.preventDefault();
     var ele = event.target;
     if (ele.matches('#add-user-btn')) {
+        //addUser();
+    } else if (ele.matches('.edit-articleEX-btn')) {
+        //showEditView(ele.parentNode.parentNode);
+    } else if (ele.matches('.cancel-articleEX-btn')) {
+        //cancelEdit(ele.parentNode.parentNode);
+    } else if (ele.matches('.submit-articleEX-btn')) {
+        //submitEdit(ele);
+    } else if (ele.matches('.delete-articleEX-btn')) {
+        //deleteUser(ele);
+    }
+}, false)
+
+/* 
+document.addEventListener('click', function (event) {
+    event.preventDefault();
+    var ele = event.target;
+    if (ele.matches('#add-user-btn')) {
         addUser();
     } else if (ele.matches('.edit-user-btn')) {
         showEditView(ele.parentNode.parentNode);
@@ -73,8 +90,8 @@ document.addEventListener('click', function (event) {
     }
 }, false)
 
-
-function addUser() {
+ */
+/* function addUser() {
     var nameInput = document.getElementById('name-input');
     var emailInput = document.getElementById('email-input');
     var data = {
@@ -132,7 +149,7 @@ function deleteUser(ele) {
             displayUsers();
         })
 }
-
+ */
 
 function httpGet(path) {
     return fetch(path, getOptions('GET'))

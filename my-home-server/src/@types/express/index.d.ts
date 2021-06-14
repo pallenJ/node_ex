@@ -1,9 +1,10 @@
-import { IUser } from "@entities/User";
+import  "express";
 
 declare module 'express' {
     export interface Request  {
         body: {
-            user: IUser
+            //user: IUser
+            password:string
         };
     }
 }
