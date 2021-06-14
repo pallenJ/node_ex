@@ -9,6 +9,8 @@ import 'express-async-errors';
 
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
+import mongoose  from 'mongoose';
+import dbInfo from 'dbInfo.json';
 
 const app = express();
 const { BAD_REQUEST } = StatusCodes;
@@ -58,6 +60,12 @@ app.use(express.static(staticDir));
 app.get('/', (req: Request, res: Response) => {
     res.sendFile('index.html', {root: viewsDir});
 });
-
+mongoose.connect(`${dbInfo.mongoDBUrl}`,{
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+});
+require('@daos/TestSample.dao');
 // Export express instance
 export default app;
