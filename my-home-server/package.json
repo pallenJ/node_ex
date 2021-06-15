@@ -61,9 +61,12 @@
     "build.ts"
   ],
   "dependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/dateformat": "^3.0.1",
     "@types/mongoose": "^5.11.97",
     "@types/mongoose-auto-increment": "^5.0.34",
+    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "brcypt": "^1.0.1",
     "command-line-args": "^5.1.1",
     "cookie-parser": "^1.4.5",

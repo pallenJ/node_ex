@@ -11,6 +11,7 @@ import BaseRouter from './routes';
 import logger from '@shared/Logger';
 import mongoose  from 'mongoose';
 import dbInfo from 'dbInfo.json';
+import aaa from './daos'
 
 const app = express();
 const { BAD_REQUEST } = StatusCodes;
@@ -62,7 +63,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 const connect = async()=>{
     await mongoose.connect(`${dbInfo.mongoDBUrl}`,{
-
+    dbName:'myHome',
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,

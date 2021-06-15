@@ -1,8 +1,8 @@
 Arguments: 
-  /usr/bin/node /usr/bin/yarn add @types/mongoose-bcrypt
+  D:\NodeJS\node.exe C:\Users\palle\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add mongoose-encryption @types/mongoose-encryption
 
 PATH: 
-  /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+  C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\Program Files\Git\cmd;D:\NodeJS\;C:\Program Files (x86)\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK Utility;C:\Users\palle\AppData\Local\Microsoft\WindowsApps;D:\flutter\flutter_windows_1.22.4-stable\flutter\bin;;D:\VScode\Microsoft VS Code\bin;C:\Users\palle\AppData\Roaming\npm
 
 Yarn version: 
   1.22.10
@@ -11,16 +11,16 @@ Node version:
   14.17.0
 
 Platform: 
-  linux x64
+  win32 x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fmongoose-bcrypt: Not found
-      at Request.params.callback [as _callback] (/usr/lib/node_modules/yarn/lib/cli.js:66988:18)
-      at Request.self.callback (/usr/lib/node_modules/yarn/lib/cli.js:140662:22)
+  Error: https://registry.yarnpkg.com/@types%2fmongoose-encryption: Not found
+      at Request.params.callback [as _callback] (C:\Users\palle\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66988:18)
+      at Request.self.callback (C:\Users\palle\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140662:22)
       at Request.emit (events.js:376:20)
-      at Request.<anonymous> (/usr/lib/node_modules/yarn/lib/cli.js:141634:10)
+      at Request.<anonymous> (C:\Users\palle\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141634:10)
       at Request.emit (events.js:376:20)
-      at IncomingMessage.<anonymous> (/usr/lib/node_modules/yarn/lib/cli.js:141556:12)
+      at IncomingMessage.<anonymous> (C:\Users\palle\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141556:12)
       at Object.onceWrapper (events.js:482:28)
       at IncomingMessage.emit (events.js:388:22)
       at endReadableNT (internal/streams/readable.js:1336:12)
@@ -90,8 +90,6 @@ npm manifest:
       "build.ts"
     ],
     "dependencies": {
-      "@types/bcrypt": "^5.0.0",
-      "@types/bcryptjs": "^2.4.2",
       "@types/dateformat": "^3.0.1",
       "@types/mongoose": "^5.11.97",
       "@types/mongoose-auto-increment": "^5.0.34",
@@ -111,7 +109,6 @@ npm manifest:
       "module-alias": "^2.2.2",
       "mongoose": "^5.12.13",
       "mongoose-auto-increment": "^5.0.1",
-      "mongoose-bcrypt": "^1.9.0",
       "morgan": "^1.10.0"
     },
     "devDependencies": {
@@ -250,18 +247,6 @@ Lockfile:
     version "1.0.1"
     resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.1.tgz#a6ca6a9a0ff366af433f42f5f0e124794ff6b8f1"
     integrity sha512-FTgBI767POY/lKNDNbIzgAX6miIDBs6NTCbdlDb8TrWovHsSvaVIZDlTqym29C6UqhzwcJx4CYr+AlrMywA0cA==
-  
-  "@types/bcrypt@^5.0.0":
-    version "5.0.0"
-    resolved "https://registry.yarnpkg.com/@types/bcrypt/-/bcrypt-5.0.0.tgz#a835afa2882d165aff5690893db314eaa98b9f20"
-    integrity sha512-agtcFKaruL8TmcvqbndlqHPSJgsolhf/qPWchFlgnW1gECTN/nKbFcoFnvKAQRFfKbh+BO6A3SWdJu9t+xF3Lw==
-    dependencies:
-      "@types/node" "*"
-  
-  "@types/bcryptjs@^2.4.2":
-    version "2.4.2"
-    resolved "https://registry.yarnpkg.com/@types/bcryptjs/-/bcryptjs-2.4.2.tgz#e3530eac9dd136bfdfb0e43df2c4c5ce1f77dfae"
-    integrity sha512-LiMQ6EOPob/4yUL66SZzu6Yh77cbzJFYll+ZfaPiPPFswtIlA/Fs1MzdKYA7JApHU49zQTbJGX3PDmCpIdDBRQ==
   
   "@types/body-parser@*":
     version "1.19.0"
@@ -2118,21 +2103,12 @@ Lockfile:
     dependencies:
       extend "^3.0.0"
   
-  mongoose-bcrypt@^1.9.0:
-    version "1.9.0"
-    resolved "https://registry.yarnpkg.com/mongoose-bcrypt/-/mongoose-bcrypt-1.9.0.tgz#bcb371bd5633d1c3fd92948c45d3cec267a47676"
-    integrity sha512-eK2Zw2tM8YYR22g5E3v2rGYLxrVmsQfVijhTgRftsRFlGX39yyBG2KwMsByIld0fnsNlANHWDCnGwq3kzq/CrA==
-    dependencies:
-      bcryptjs "^2.4.3"
-      mongoose "3.8.* || >=4"
-      semver "^7.3.2"
-  
   mongoose-legacy-pluralize@1.0.2:
     version "1.0.2"
     resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
     integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
   
-  mongoose@*, "mongoose@3.8.* || >=4", mongoose@^5.12.13:
+  mongoose@*, mongoose@^5.12.13:
     version "5.12.13"
     resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.12.13.tgz#6707fb2f6284536bb6367c94ccc3ce85475a387d"
     integrity sha512-QGn1FCzZ8Z+mMGVg8oR2kQw4NmhLloCHsw1NqKWg3Yr7WfPzkE4pe7s9P6o5pkYGsku17n9mqMHowne7EFK/zQ==
