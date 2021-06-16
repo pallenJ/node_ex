@@ -27,7 +27,11 @@ TestSampleSchema.pre('save',function(next){
     this.set("password",hashedPwd);
     next();
 });
-
+TestSampleSchema.pre('updateOne',function (next) {
+    
+    this.set('editedAt',new Date());
+    next();
+});
 
 TestSampleSchema.plugin(autoIncrement.plugin,{model: 'TestSample',field:'bno',startAt:0,unique:true,incrementBy:1});
 logger.info('=========TestSample=========');

@@ -1,7 +1,8 @@
-import TestSampleSchema from "@daos/TestSample.dao";
+import TestSampleDao from "@daos/TestSample.dao";
 import { exception } from "console";
 import { Request, Response } from 'express';
 import logger from './../shared/Logger';
+import bcrypt from 'bcrypt';
 
 const parse = (val:any,init:number)=>{
 
@@ -14,20 +15,30 @@ const parse = (val:any,init:number)=>{
 }
 const TestSampleService ={
     createSample: async(req:Request,res:Response)=>{
-        const created = new TestSampleSchema(req.body);
+        const created = new TestSampleDao(req.body);
         logger.info(JSON.stringify(created.schema));
 
         await created.save((err, data) => {
-            // 에러면 false 반환
             if (err) return { suceess: false, err };
-            // 성공적이면 200 상태 코드 날리고 true 값 돌려주기
             return { suceess: true ,data};
           });
         
     },
+    editSample: async(req:Request,res:Response) =>{
+        const {bno} = req.params;
+        const {content,password} = req.body;
+        const pwInfo:any = await TestSampleDao.findOne({bno:parseInt(bno)}).select("password");
+        const hashedPwd:string = pwInfo.password;
+        if(bcrypt.compareSync(password,hashedPwd)){
+            return await TestSampleDao.updateOne({bno:parseInt(bno)},{content});
+        }else{
+            return {error:"password is wrong"};
+        }
+      
+        
+    },
     list : async(req:Request,res:Response) =>{
-       const dataCnt = await TestSampleSchema.count();
-       //  await TestSampleSchema.find().select("-salt -password").sort("-bno").sort("-addedAt")
+       const dataCnt = await TestSampleDao.count();
        const {type,limit,page } = req.query;
        logger.info(req.query.page);
        logger.info(req.query.limit);
@@ -40,7 +51,7 @@ const TestSampleService ={
 
        if(typeVal.toString().toLowerCase() === 'all'){
           return {
-              data: await TestSampleSchema.find().select("-salt -password").sort("-bno").sort("-addedAt"),
+              data: await TestSampleDao.find().select("-salt -password").sort("-bno").sort("-addedAt"),
               type:'All'
           }
        }
@@ -61,11 +72,11 @@ const TestSampleService ={
        }
        else if(dataCnt - startAt<=limitVal ){
 
-           rs.data = await TestSampleSchema.find().select("-salt -password").sort("-bno").sort("-addedAt").skip(startAt).limit(dataCnt - startAt);
+           rs.data = await TestSampleDao.find().select("-salt -password").sort("-bno").sort("-addedAt").skip(startAt).limit(dataCnt - startAt);
            rs.descript= 'last page';
        }
        else{
-           rs.data = await TestSampleSchema.find().select("-salt -password").sort("-bno").sort("-addedAt").skip(startAt).limit(limitVal);
+           rs.data = await TestSampleDao.find().select("-salt -password").sort("-bno").sort("-addedAt").skip(startAt).limit(limitVal);
            rs.descript= 'normal page';
        }
        return rs;
@@ -76,7 +87,7 @@ const TestSampleService ={
     ,sampleListCreate: async(req:Request,res:Response) =>{
         const limit = req.body.limit||(Math.floor(Math.random()*100)+200);
         for (let index = 0; index < limit; index++) {
-           await new TestSampleSchema({writer:`writer${index}`,content:`content${index}`,password:`jmp12#`}).save();
+           await new TestSampleDao({writer:`writer${index}`,content:`content${index}`,password:`jmp12#`}).save();
         }
         return res.redirect('/');
         
