@@ -13,4 +13,9 @@ router.post('/add',async(req:Request,res:Response)=>{
   const rs = await TestSampleService.createSample(req,res);
   return res.send(rs);
 });
+
+router.post('/addSamples',async(req:Request,res:Response)=>{
+  const rs = await TestSampleService.sampleListCreate(req,res);
+  return res.send(rs);
+});
 export default router;

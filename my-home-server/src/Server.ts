@@ -65,9 +65,7 @@ const connect = async()=>{
     await mongoose.connect(`${dbInfo.mongoDBUrl}`,{
     dbName:'myHome',
     useNewUrlParser: true,
-    useUnifiedTopology: true,
     useCreateIndex: true,
-    useFindAndModify: true,
 
 })}
 connect();

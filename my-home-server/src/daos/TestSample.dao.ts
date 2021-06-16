@@ -8,9 +8,10 @@ import bcrypt from 'bcrypt';
 const incre_connection = mongoose.createConnection(`${dbInfo.mongoDBUrl}/myHome`);
 
 autoIncrement.initialize(incre_connection);
+
 const currentDate = new Date();
-logger.info('aaa');
 let TestSampleSchema = new Schema({
+    bno:{type:Number , defult:0},
     writer:{type:String,required:true},
     content:{type:String, required:true},
     addedAt:{type:Date,default:currentDate},
@@ -28,6 +29,6 @@ TestSampleSchema.pre('save',function(next){
 });
 
 
-//TestSampleSchema.plugin(bcrypt,{fields:['password'],round:10});
-logger.info('aaaaaa');
-export default model('TestSampleSchema',TestSampleSchema,'testSample');
+TestSampleSchema.plugin(autoIncrement.plugin,{model: 'TestSample',field:'bno',startAt:0,unique:true,incrementBy:1});
+logger.info('=========TestSample=========');
+export default model('TestSample',TestSampleSchema,'testSample');
