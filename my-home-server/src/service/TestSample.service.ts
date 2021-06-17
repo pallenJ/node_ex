@@ -3,6 +3,7 @@ import { exception } from "console";
 import { Request, Response } from 'express';
 import logger from './../shared/Logger';
 import bcrypt from 'bcrypt';
+import { Schema } from "mongoose";
 
 const parse = (val:any,init:number)=>{
 
@@ -10,7 +11,7 @@ const parse = (val:any,init:number)=>{
         if(!val)throw new Error('undefined');
         return parseInt(val+'');
     } catch (error) {
-         return init;    
+         return init;
     }
 }
 const TestSampleService ={
@@ -22,21 +23,22 @@ const TestSampleService ={
             if (err) return { suceess: false, err };
             return { suceess: true ,data};
           });
-        
+
     },
     editSample: async(req:Request,res:Response) =>{
         const {bno} = req.params;
-        const {content,password} = req.body;
-        const pwInfo:any = await TestSampleDao.findOne({bno:parseInt(bno)}).select("password");
-        const hashedPwd:string = pwInfo.password;
-        if(bcrypt.compareSync(password,hashedPwd)){
-            return await TestSampleDao.updateOne({bno:parseInt(bno)},{content});
-        }else{
-            return {error:"password is wrong"};
-        }
-      
-        
+        const {content} = req.body;
+        let sampleInfo:any = await TestSampleDao.findOne({bno:parseInt(bno)});
+        const historys = sampleInfo.history as Array<Schema>;
+        const __v :number = (sampleInfo.__v as number) + 1;
+        sampleInfo.history = [];
+        return await TestSampleDao.updateOne({bno:parseInt(bno)},{content, history: historys.concat([sampleInfo]),__v});
     },
+    removeSample: async(req:Request,res:Response) =>{
+        const bno = parseInt(req.params.bno);
+        return await TestSampleDao.remove({bno})
+    }
+    ,
     list : async(req:Request,res:Response) =>{
        const dataCnt = await TestSampleDao.count();
        const {type,limit,page } = req.query;
@@ -80,18 +82,33 @@ const TestSampleService ={
            rs.descript= 'normal page';
        }
        return rs;
-       
+
     }
-    
+    ,
+    passwordCheck:async(req:Request,res:Response)=>{
+        const {bno} = req.params;
+        const {password} = req.body;
+        const sampleInfo:any = await TestSampleDao.findOne({bno:parseInt(bno)}).select('password');
+        if(sampleInfo == null){
+            return {success:false , describe:'article is not exist'};
+        }
+        logger.info(sampleInfo);
+        const hashedPwd:string = sampleInfo.password;
+        logger.info(hashedPwd);
+        logger.info(password);
+        const rs = bcrypt.compareSync(password,hashedPwd);
+        logger.info(rs);
+        return {success:rs};
+    }
 
     ,sampleListCreate: async(req:Request,res:Response) =>{
         const limit = req.body.limit||(Math.floor(Math.random()*100)+200);
         for (let index = 0; index < limit; index++) {
            await new TestSampleDao({writer:`writer${index}`,content:`content${index}`,password:`jmp12#`}).save();
         }
-        return res.redirect('/');
-        
-        
+        return res.redirect('../');
+
+
      }
 
 }

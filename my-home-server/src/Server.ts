@@ -69,6 +69,7 @@ const connect = async()=>{
 
 })}
 connect();
+
 //require('@daos/TestSample.dao');
 // Export express instance
 export default app;

@@ -18,7 +18,7 @@ let TestSampleSchema = new Schema({
     editedAt:{type:Date,default:currentDate},
     password:{type: String,required:true},
     salt:{type:String},
-    // test:{type:Types.Map,default:new Types.Map() }
+    history:{type:Array,default:[]}
 });
 TestSampleSchema.pre('save',function(next){
     const salt = bcrypt.genSaltSync(10);
@@ -28,7 +28,7 @@ TestSampleSchema.pre('save',function(next){
     next();
 });
 TestSampleSchema.pre('updateOne',function (next) {
-    
+
     this.set('editedAt',new Date());
     next();
 });

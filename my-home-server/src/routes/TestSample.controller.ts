@@ -14,9 +14,9 @@ router.post('/add',async(req:Request,res:Response)=>{
     const rs = await TestSampleService.createSample(req,res);
     return res.status(200).send(rs);
   } catch (error) {
-    return res.status(500).send(error);    
+    return res.status(500).send(error);
   }
-  
+
 });
 
 router.post('/addSamples',async(req:Request,res:Response)=>{
@@ -39,11 +39,21 @@ router.patch('/edit/:bno',async(req:Request,res:Response)=>{
 
 router.delete('/delete/:bno',async(req:Request,res:Response)=>{
   try {
-    const rs = await TestSampleService.editSample(req,res);
+    const rs = await TestSampleService.removeSample(req,res);
     return res.status(200).send(rs);
   } catch (error) {
     return res.status(500).send(error);
   }
 });
+
+router.post('/pwCheck/:bno',async(req,res)=>{
+  try {
+    const rs = await TestSampleService.passwordCheck(req,res);
+    return res.status(200).send(rs);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+
+})
 
 export default router;
