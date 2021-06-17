@@ -70,9 +70,9 @@
       "@daos/*": [
         "src/daos/*"
       ],
-      "@entities/*": [
+     /*  "@entities/*": [
         "src/entities/*"
-      ],
+      ], */
       "@shared/*": [
         "src/shared/*"
       ],
