@@ -64,6 +64,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/dateformat": "^3.0.1",
     "@types/http-status-codes": "^1.2.0",
+    "@types/module-alias": "^2.0.0",
     "@types/mongoose": "^5.11.97",
     "@types/mongoose-auto-increment": "^5.0.34",
     "bcrypt": "^5.0.1",
