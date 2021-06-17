@@ -7,7 +7,7 @@
     "start": "node -r module-alias/register ./dist --env=production",
     "start:dev": "nodemon",
     "test": "nodemon --config ./spec/nodemon.json",
-    "test:no-reloading": "./node_modules/.bin/ts-node -r tsconfig-paths/register ./spec"
+    "test:no-reloading": "./node_modules/.bin/ts-node -r tsconfig-paths/register"
   },
   "license": "UNLICENSED",
   "nodemonConfig": {
@@ -57,7 +57,6 @@
     }
   },
   "eslintIgnore": [
-    "src/public/",
     "build.ts"
   ],
   "dependencies": {

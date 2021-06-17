@@ -18,12 +18,19 @@ logger.timestamp = false;
         // Remove current build
         await remove('./dist/');
         // Copy front-end files
-        //await copy('./src/public', './dist/public');
+
         //await copy('./src/views', './dist/views');
         // Copy production env file
         await copy('./src/pre-start/env/production.env', './dist/pre-start/env/production.env');
         // Copy back-end files
-        await exec('tsc --build tsconfig.prod.json', './')
+        await exec('tsc --build tsconfig.prod.json', './');
+        try{
+            await copy('./dist/src','./dist');
+            await remove('./dist/src')
+            logger.warn("==========src warning==========");
+        }catch(err){
+            logger.info("success build");
+        }
     } catch (err) {
         logger.err(err);
     }
@@ -49,6 +56,7 @@ function copy(src: string, dest: string): Promise<void> {
 
 
 function exec(cmd: string, loc: string): Promise<void> {
+
     return new Promise((res, rej) => {
         return childProcess.exec(cmd, {cwd: loc}, (err, stdout, stderr) => {
             if (!!stdout) {
@@ -57,6 +65,7 @@ function exec(cmd: string, loc: string): Promise<void> {
             if (!!stderr) {
                 logger.warn(stderr);
             }
+
             return (!!err ? rej(err) : res());
         });
     });
