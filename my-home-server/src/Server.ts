@@ -11,7 +11,6 @@ import BaseRouter from './routes';
 import logger from '@shared/Logger';
 import mongoose  from 'mongoose';
 import dbInfo from 'dbInfo.json';
-import aaa from './daos'
 
 const app = express();
 const { BAD_REQUEST } = StatusCodes;
