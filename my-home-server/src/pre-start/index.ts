@@ -6,6 +6,7 @@
 import path from 'path';
 import dotenv from 'dotenv';
 import commandLineArgs from 'command-line-args';
+import logger from '@shared/Logger';
 
 
 

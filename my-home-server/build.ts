@@ -14,6 +14,7 @@ logger.timestamp = false;
 
 
 (async () => {
+    logger.info(__dirname);
     try {
         // Remove current build
         await remove('./dist/');
@@ -24,13 +25,13 @@ logger.timestamp = false;
         await copy('./src/pre-start/env/production.env', './dist/pre-start/env/production.env');
         // Copy back-end files
         await exec('tsc --build tsconfig.prod.json', './');
-        try{
+        /* try{
             await copy('./dist/src','./dist');
             await remove('./dist/src')
             logger.warn("==========src warning==========");
         }catch(err){
             logger.info("success build");
-        }
+        } */
     } catch (err) {
         logger.err(err);
     }
@@ -65,7 +66,7 @@ function exec(cmd: string, loc: string): Promise<void> {
             if (!!stderr) {
                 logger.warn(stderr);
             }
-
+            logger.info(cmd);
             return (!!err ? rej(err) : res());
         });
     });

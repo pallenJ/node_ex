@@ -3,7 +3,7 @@ import { json } from "express";
 import mongoose, { Schema,model, Types } from "mongoose";
 import autoIncrement from "mongoose-auto-increment"
 import path from "path/posix";
-import dbInfo from "../../dbInfo.json"
+import dbInfo from "@infos/dbInfo.json"
 import bcrypt from 'bcrypt';
 const incre_connection = mongoose.createConnection(`${dbInfo.mongoDBUrl}/myHome`);
 

@@ -9,7 +9,7 @@ import 'express-async-errors';
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
 import mongoose  from 'mongoose';
-import dbInfo from 'dbInfo.json';
+import dbInfo from '@infos/dbInfo.json';
 
 const app = express();
 const { BAD_REQUEST } = StatusCodes;
