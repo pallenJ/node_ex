@@ -48,7 +48,6 @@ const TestSampleService ={
        const typeVal = type || 'paging';
        const limitVal = parse(limit,20);
        const pageVal = parse(page,1);
-       const pagingCnt = 10;
        const startAt = limitVal*(pageVal-1);
 
        if(typeVal.toString().toLowerCase() === 'all'){
@@ -57,17 +56,17 @@ const TestSampleService ={
               type:'All'
           }
        }
-
-       const pageStart = pagingCnt * Math.floor(pageVal/pagingCnt)+1;
-       const pageEnd = pagingCnt * (Math.floor(pageVal/pagingCnt)+1);
+       logger.info('lastPage:'+dataCnt);
        let rs:any = {
         type:'paging',
         page:pageVal,
         limit:limitVal,
         descript:'',
-        pageStart,
-        pageEnd
+        lastPage:Math.ceil(dataCnt/limitVal)
        };
+
+
+
        if(dataCnt<= startAt){
            rs.data = [];
            rs.descript= 'over the last page';

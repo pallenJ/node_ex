@@ -3,11 +3,12 @@ import { Route } from "react-router-dom";
 import TestSample from "./TestSample";
 
 const App = ()=>{
+
     return (
         <div>
             <Route path = '/' component={Main} exact/>
-            <Route path = 'home' component = {Home}/>
-            <Route path = 'testSample' component = {TestSample}/>
+            <Route path = '/home' component = {Home}/>
+            <Route path = '/testSample' component = {TestSample}/>
         </div>
     )
 

@@ -10,6 +10,7 @@ import BaseRouter from './routes';
 import logger from '@shared/Logger';
 import mongoose  from 'mongoose';
 import dbInfo from '@infos/dbInfo.json';
+import cors from 'cors'
 
 const app = express();
 const { BAD_REQUEST } = StatusCodes;
@@ -23,6 +24,13 @@ const { BAD_REQUEST } = StatusCodes;
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
+
+const options = {
+    origin: '*',
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+app.use(cors(options));
 
 // Show routes called in console during development
 if (process.env.NODE_ENV === 'development') {
