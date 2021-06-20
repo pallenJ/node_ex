@@ -41,44 +41,21 @@ const TestSampleService ={
     ,
     list : async(req:Request,res:Response) =>{
        const dataCnt = await TestSampleDao.count();
-       const {type,limit,page } = req.query;
-       logger.info(req.query.page);
-       logger.info(req.query.limit);
-       logger.info(req.query.type);
-       const typeVal = type || 'paging';
+       const {limit,start}= req.query;
        const limitVal = parse(limit,20);
-       const pageVal = parse(page,1);
-       const startAt = limitVal*(pageVal-1);
-
-       if(typeVal.toString().toLowerCase() === 'all'){
-          return {
-              data: await TestSampleDao.find().select("-salt -password").sort("-bno").sort("-addedAt"),
-              type:'All'
-          }
-       }
-       logger.info('lastPage:'+dataCnt);
+       const pageCnt = 10;
+       const startAt = parse(start,0);
        let rs:any = {
         type:'paging',
-        page:pageVal,
         limit:limitVal,
-        descript:'',
-        lastPage:Math.ceil(dataCnt/limitVal)
+        pageCnt:pageCnt,
+        lastPage:Math.ceil(dataCnt/limitVal),
+        allCount:dataCnt
        };
-
-
-
-       if(dataCnt<= startAt){
+       if(dataCnt<=startAt){
            rs.data = [];
-           rs.descript= 'over the last page';
-       }
-       else if(dataCnt - startAt<=limitVal ){
-
-           rs.data = await TestSampleDao.find().select("-salt -password").sort("-bno").sort("-addedAt").skip(startAt).limit(dataCnt - startAt);
-           rs.descript= 'last page';
-       }
-       else{
-           rs.data = await TestSampleDao.find().select("-salt -password").sort("-bno").sort("-addedAt").skip(startAt).limit(limitVal);
-           rs.descript= 'normal page';
+       }else{
+           rs.data = await TestSampleDao.find().select("-salt -password").sort("-bno").sort("-addedAt").skip(startAt).limit(Math.min(limitVal*pageCnt,dataCnt-startAt) );
        }
        return rs;
 
@@ -91,12 +68,8 @@ const TestSampleService ={
         if(sampleInfo == null){
             return {success:false , describe:'article is not exist'};
         }
-        logger.info(sampleInfo);
         const hashedPwd:string = sampleInfo.password;
-        logger.info(hashedPwd);
-        logger.info(password);
         const rs = bcrypt.compareSync(password,hashedPwd);
-        logger.info(rs);
         return {success:rs};
     }
 

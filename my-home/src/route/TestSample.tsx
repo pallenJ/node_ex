@@ -1,117 +1,106 @@
-import React, { useState , useEffect} from "react";
-import { Link } from "react-router-dom";
+import { useState , useEffect} from "react";
 import { getList } from '../service/TestSample.service'
-import {Button, Table,Pagination} from 'react-bootstrap'
-import queryString, { stringify } from "query-string";
+import ReactPaginate from 'react-paginate'
+import {Table} from 'react-bootstrap'
+import dateFormat from "dateformat";
 
-const TestSample =  ({history, location,match}:any)=>{
+const TestSample =  ()=>{
 
-    const [pageInfo, setpageInfo] = useState(queryString.parseUrl(location.search).query);
+    const [page, setpage] = useState(-1);
+    const [showCnt, setshowCnt] = useState(20)
+    const [allList, setallList] = useState([]);
+    const [allCnt, setallCnt] = useState(0);
+    const [list, setlist] = useState([] as Array<any>);
+    const pageLength = 10;
 
-
-    const [list, setlist] = useState({type:'page',data:[],descript:"",lastPage:0,page:1});
-    const getDatas = (_page:number /* = parseInt(pageInfo.page?.toString()??'1') */)=>{
-        let newPgInfo = {...pageInfo};
-        newPgInfo.page = _page.toString();
-        getList(newPgInfo).then(e =>{
-            setlist(e.data);
-            setpageInfo({page:_page.toString()});
-        })
-
-
-     };
-    const headers = ['bno','writer','content','addedAt','editedAt'];
-     const getPageNum = ()=>{
-        return parseInt(pageInfo.page?.toString()??'0')
-     }
     useEffect(() => {
-        const pageVal = parseInt(pageInfo?(pageInfo.page?.toString()??'1'):'1');
-        getDatas(pageVal);
+        setShowList(0);
     }, [])
 
+    const setShowList = (_page:number)=>{
+        const otherView = Math.floor(page/pageLength)!== Math.floor(_page/pageLength);
 
-    const pagingComponent = ()=>{
-        const pageVal = parseInt(pageInfo?(pageInfo.page?.toString()??'1'):'1');
-        const prevDots = pageVal>3&&list.lastPage>5;
-        const nextDots = list.lastPage>5&&list.lastPage-pageVal>2;
-
-        let showStart = 1;
-        let showEnd = list.lastPage;
-        let showList = [];
-        if(!prevDots){
-            showEnd = Math.min(showEnd,5);
-        }else if(!nextDots){
-            showStart = Math.max(1,showEnd-4);
+        if(otherView){
+            const limit = showCnt * pageLength;
+            const start = showCnt *pageLength * Math.floor(_page/pageLength);
+            getList({start,limit}).then(
+                e =>{
+                    const _allCnt = e.data.allCount;
+                    setallCnt(_allCnt);
+                    setallList(e.data.data)
+                    pagingList(e.data.data as Array<any>,_page,_allCnt);
+                }
+                ).catch((err)=>console.error(err))
         }else{
-            showStart = pageVal-2;
-            showEnd = pageVal+2;
+            pagingList(allList,_page);
         }
-        for (let index = showStart; index <=showEnd; index++) {
-            showList.push(
-                <Pagination.Item active={index===pageVal} onClick = {()=>{
-                    getDatas(index)
-                }}>
-
-                {index}
-                </Pagination.Item>
-                );
-        }
-
-        return(
-        <Pagination className = "justify-content-md-center" >
-
-        {list.page ===1?null:<Pagination.Prev key = 'to-perv-page' onClick = {()=>{getDatas(getPageNum()-1)}}/>}
-        {prevDots?<Pagination.Item onClick = {()=>{getDatas(1);setpageInfo({page:'1'});}}>{1}</Pagination.Item>:null}
-        {prevDots?<Pagination.Ellipsis />:null}
-
-        {showList.map(e=>e)}
-
-        {nextDots?<Pagination.Ellipsis/>:null}
-        {nextDots?<Pagination.Item key='to-next-page' onClick = {()=>{getDatas(list.lastPage)}}>{list.lastPage}</Pagination.Item>:null}
-        {list.page ===list.lastPage?null:<Pagination.Next onClick = {()=>{getDatas(getPageNum()+1)}}/>}
-
-      </Pagination>)
+        setpage(_page);
+    }
+    const pagingList = (dataList : Array<any>, _page = page,_allCnt = allCnt)=>{
+        const startAt = showCnt * (_page%pageLength);
+        const endAt = Math.min(20,Math.max(0,dataList.length-startAt))+startAt;
+        setlist(dataList.slice(startAt,endAt));
     }
 
+    const headers = ['bno','writer','content','addedAt','editedAt'];
+
+    //list.map(e =><pre>{JSON.stringify(e)}</pre>)
     return  (
-        <div>
-           {
-               <Table size='sm' variant ='dark' striped>
-                   <thead>
 
-                   </thead>
-                   <tbody>
-                    {
+        <div className ="container text-center">
+            <hr/>
+            <Table className="" size="sm" variant="table" hover>
 
-                        (list?.data as Array<any>).map(
-                            _data =>(
-                            <tr>
-                                {
-                                    headers.map(
-                                        _val =>{
-                                         return (<td>
-                                                {_data?.[_val]}
-                                            </td>
-                                        )
-                                        }
-                                    )
-                                }
-                            </tr>)
-                        )
+                         <thead>
+                <tr>
+                  {
+                      headers.map(e=><th>{e}</th>)
 
-                    }
-                   </tbody>
-               </Table>
+                  }
+                  <th>options</th>
 
-           }
-           <hr></hr>
-            {
-                pagingComponent()
+                </tr>
+              </thead>
+              <tbody>
 
-            }
-            <Link to = {`/`}>
-            sdfds
-            </Link>
+                  {
+                      list.map(_data =>
+                        <tr>
+                            {headers.map(e=>
+                            <td>{e.endsWith('At')?dateFormat(Date.parse(_data[e])):_data[e]}</td>
+                            )}
+                            <td></td>
+                        </tr>
+                    )
+                  }
+
+              </tbody>
+            </Table>
+                <hr />
+
+            <ReactPaginate
+            pageCount = {Math.floor(allCnt/showCnt)}
+            pageRangeDisplayed ={5}
+            activeLinkClassName = {""}
+            disabledClassName ={""}
+            extraAriaContext = {"Previous"}
+            marginPagesDisplayed = {0}
+            breakClassName = {"page-item "}
+            breakLinkClassName = {"page-link"}
+            previousLabel = {"prev"}
+            nextLabel = {"next"}
+            pageClassName = {"Page navigation"}
+            containerClassName = {"pagination table-dark"}
+            pageLinkClassName = {"page-link"}
+            nextClassName = {"page-link"}
+            previousClassName = {"page-link"}
+            activeClassName = {"page-item active table-dark"}
+            previousLinkClassName = {"page-item"}
+            nextLinkClassName = {"page-item"}
+            onPageChange ={(data)=>{
+                setShowList(data.selected)
+            }}
+            />
         </div>
     );
 }
