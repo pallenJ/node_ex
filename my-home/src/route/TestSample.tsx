@@ -43,7 +43,7 @@ const TestSample =  ()=>{
     }
 
     const headers = ['bno','writer','content','addedAt','editedAt'];
-
+    const tdSizes : {[index:string]:number} = { 'bno':5,'writer':10,'content':30,'addedAt':20,'editedAt':20};
     //list.map(e =><pre>{JSON.stringify(e)}</pre>)
     return  (
 
@@ -54,8 +54,7 @@ const TestSample =  ()=>{
                          <thead>
                 <tr>
                   {
-                      headers.map(e=><th>{e}</th>)
-
+                      headers.map(e=><th style = {{width:`${tdSizes[e]}%`}}>{e}</th>)
                   }
                   <th>options</th>
 
@@ -67,7 +66,7 @@ const TestSample =  ()=>{
                       list.map(_data =>
                         <tr>
                             {headers.map(e=>
-                            <td>{e.endsWith('At')?dateFormat(Date.parse(_data[e])):_data[e]}</td>
+                            <td style = {{width:`${tdSizes[e]}%`}}>{e.endsWith('At')?dateFormat(Date.parse(_data[e])):_data[e]}</td>
                             )}
                             <td></td>
                         </tr>
@@ -75,32 +74,55 @@ const TestSample =  ()=>{
                   }
 
               </tbody>
+              {/* <tfoot className = 'table-dark'>
+                  <tr>
+                      <th style = {{width:'5%'}}>
+                        new  
+                      </th>
+                      <td style = {{width:'15%'}}>
+                      <input type="text" className="input form-control row row-cols-3" placeholder="Writer" aria-label="Username" aria-describedby="basic-addon1" />
+                      </td>
+                      <td style = {{width:'50%'}} colSpan = {2}>
+                      <input type="text" className="input form-control row row-cols-3" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" />
+                      </td>
+                      <td  style = {{width:'20%'}}>
+                      
+                      </td>
+                      <td>
+                      
+                      </td>
+                  </tr>
+              </tfoot> */}
             </Table>
                 <hr />
+            <div className = "align-items-center">
 
             <ReactPaginate
             pageCount = {Math.floor(allCnt/showCnt)}
-            pageRangeDisplayed ={5}
+            pageRangeDisplayed ={3}
+            initialPage ={0}
             activeLinkClassName = {""}
             disabledClassName ={""}
             extraAriaContext = {"Previous"}
-            marginPagesDisplayed = {0}
+            marginPagesDisplayed = {1}
             breakClassName = {"page-item "}
             breakLinkClassName = {"page-link"}
             previousLabel = {"prev"}
             nextLabel = {"next"}
-            pageClassName = {"Page navigation"}
-            containerClassName = {"pagination table-dark"}
+            pageClassName = {"Page navigation align-items-center"}
+            containerClassName = {"pagination align-items-center"}
             pageLinkClassName = {"page-link"}
-            nextClassName = {"page-link"}
             previousClassName = {"page-link"}
-            activeClassName = {"page-item active table-dark"}
+            nextClassName = {"page-link"}
+            activeClassName = {"page-item active"}
             previousLinkClassName = {"page-item"}
             nextLinkClassName = {"page-item"}
             onPageChange ={(data)=>{
                 setShowList(data.selected)
             }}
             />
+
+            </div>
         </div>
     );
 }
