@@ -1,7 +1,7 @@
 import { useState , useEffect} from "react";
 import { getList } from '../service/TestSample.service'
 import ReactPaginate from 'react-paginate'
-import {Table} from 'react-bootstrap'
+import {Table,Button} from 'react-bootstrap'
 import dateFormat from "dateformat";
 
 const TestSample =  ()=>{
@@ -68,31 +68,37 @@ const TestSample =  ()=>{
                             {headers.map(e=>
                             <td style = {{width:`${tdSizes[e]}%`}}>{e.endsWith('At')?dateFormat(Date.parse(_data[e])):_data[e]}</td>
                             )}
-                            <td></td>
+                            <td>
+                                <Button variant = "outline-secondary"> <span className="fa fa-history" aria-hidden="true"></span> </Button>&nbsp;&nbsp;
+                                <Button variant = "primary"> <span className="fa fa-edit" aria-hidden="true"></span> </Button>&nbsp;&nbsp;
+                                <Button variant = "danger"> <span className="fa fa fa-trash" aria-hidden="true"></span> </Button>
+                            </td>
                         </tr>
                     )
                   }
 
               </tbody>
-              {/* <tfoot className = 'table-dark'>
+              {<tfoot className = 'table-dark'>
                   <tr>
-                      <th style = {{width:'5%'}}>
+                      <th>
                         new  
                       </th>
-                      <td style = {{width:'15%'}}>
+                      <td>
                       <input type="text" className="input form-control row row-cols-3" placeholder="Writer" aria-label="Username" aria-describedby="basic-addon1" />
                       </td>
-                      <td style = {{width:'50%'}} colSpan = {2}>
-                      <input type="text" className="input form-control row row-cols-3" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" />
-                      </td>
-                      <td  style = {{width:'20%'}}>
-                      
+                      <td colSpan = {2}>
+                      <input type="text" className="input form-control row row-cols-3" placeholder="Content" aria-label="Username" aria-describedby="basic-addon1" />
                       </td>
                       <td>
-                      
+                        <input type="password" className="input form-control row row-cols-3" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1"/>
+                      </td>
+                      <td className = "form-group">
+                        <Button variant = "success" className="form-control">
+                            <span className="fa fa-paper-plane" aria-hidden="true"> &nbsp;&nbsp;ADD</span>
+                        </Button>
                       </td>
                   </tr>
-              </tfoot> */}
+              </tfoot>}
             </Table>
                 <hr />
             <div className = "align-items-center">
