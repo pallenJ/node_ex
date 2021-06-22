@@ -1,5 +1,5 @@
 import { useState , useEffect} from "react";
-import { getList } from '../service/TestSample.service'
+import  { getList,addOne } from '../service/TestSample.service'
 import ReactPaginate from 'react-paginate'
 import {Table,Button} from 'react-bootstrap'
 import dateFormat from "dateformat";
@@ -27,8 +27,8 @@ const TestSample =  ()=>{
         });
     }
 
-    const setShowList = (_page:number)=>{
-        const otherView = Math.floor(page/pageLength)!== Math.floor(_page/pageLength);
+    const setShowList = (_page:number,force = false)=>{
+        const otherView = Math.floor(page/pageLength)!== Math.floor(_page/pageLength)||force;
 
         if(otherView){
             const limit = showCnt * pageLength;
@@ -109,7 +109,7 @@ const TestSample =  ()=>{
                         onChange = {e=>changeInsert('password',e.target.value)}/>
                      </div>
                     <div className="col-md-2">
-                        <Button variant = "success" className="form-control">
+                        <Button variant = "success" className="form-control" onClick = {()=>{addOne(insert).then(e=>{console.log(e); alert('article ADDED'); setShowList(page,true);})}}>
                             <span className="fa fa-paper-plane" aria-hidden="true"> &nbsp;ADD</span>
                         </Button>
                         
