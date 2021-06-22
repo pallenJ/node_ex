@@ -11,6 +11,7 @@ const TestSample =  ()=>{
     const [allList, setallList] = useState([]);
     const [allCnt, setallCnt] = useState(0);
     const [list, setlist] = useState([] as Array<any>);
+
     const pageLength = 10;
 
     useEffect(() => {
@@ -80,22 +81,28 @@ const TestSample =  ()=>{
               </tbody>
               {<tfoot className = 'table-dark'>
                   <tr>
-                      <th>
-                        new  
-                      </th>
-                      <td>
-                      <input type="text" className="input form-control row row-cols-3" placeholder="Writer" aria-label="Username" aria-describedby="basic-addon1" />
-                      </td>
-                      <td colSpan = {2}>
-                      <input type="text" className="input form-control row row-cols-3" placeholder="Content" aria-label="Username" aria-describedby="basic-addon1" />
-                      </td>
-                      <td>
-                        <input type="password" className="input form-control row row-cols-3" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1"/>
-                      </td>
-                      <td className = "form-group">
-                        <Button variant = "success" className="form-control">
+                  <th>
+                      NEW
+                  </th>
+                      <td colSpan = {5}>
+                    <form onSubmit = {(event)=> {console.log(event)}} className = "row g-3" >
+                    <div className="col-md-2">
+                        <input type="text" className="form-control" id="writer" name = "writer" placeholder="writer"/>
+                    </div>
+                    <div className="col-md-5">
+                        <input type="text" className="form-control" id="content" name ="content" placeholder="Content"/>
+                     </div>
+                    <div className="col-md-3">
+                        <input type="password" className="form-control" id="password" name = "password" placeholder="Password"/>
+                     </div>
+                    <div className="col-md-2">
+                        <Button variant = "success" className="form-control" type = "submit">
                             <span className="fa fa-paper-plane" aria-hidden="true"> &nbsp;&nbsp;ADD</span>
                         </Button>
+                        
+                     </div>
+                     
+                        </form>
                       </td>
                   </tr>
               </tfoot>}
