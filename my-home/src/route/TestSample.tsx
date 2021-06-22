@@ -11,12 +11,21 @@ const TestSample =  ()=>{
     const [allList, setallList] = useState([]);
     const [allCnt, setallCnt] = useState(0);
     const [list, setlist] = useState([] as Array<any>);
-
+    const [insert, setinsert] = useState({'writer':'','content':'','password':''});
     const pageLength = 10;
 
     useEffect(() => {
         setShowList(0);
     }, [])
+
+    const changeInsert = (key:string,newValue:string)=>{
+        setinsert((_val)=>{
+            const temp = _val as {[index:string]:string};
+            temp[key] = newValue
+            //console.log(`newValur of${key}:${newValue}`)
+            return temp as any;
+        });
+    }
 
     const setShowList = (_page:number)=>{
         const otherView = Math.floor(page/pageLength)!== Math.floor(_page/pageLength);
@@ -85,24 +94,28 @@ const TestSample =  ()=>{
                       NEW
                   </th>
                       <td colSpan = {5}>
-                    <form onSubmit = {(event)=> {console.log(event)}} className = "row g-3" >
+                    <div  className = "row g-3" >
                     <div className="col-md-2">
-                        <input type="text" className="form-control" id="writer" name = "writer" placeholder="writer"/>
+                        <input type="text" className="form-control" id="writer" name = "writer" placeholder="writer" 
+                        onChange = {e=>changeInsert('writer',e.target.value)}/>
                     </div>
                     <div className="col-md-5">
-                        <input type="text" className="form-control" id="content" name ="content" placeholder="Content"/>
+                        <input type="text" className="form-control" id="content" name ="content" placeholder="Content"
+                        onChange = {e=>changeInsert('content',e.target.value)}
+                        />
                      </div>
                     <div className="col-md-3">
-                        <input type="password" className="form-control" id="password" name = "password" placeholder="Password"/>
+                        <input type="password" className="form-control" id="password" name = "password" placeholder="Password"
+                        onChange = {e=>changeInsert('password',e.target.value)}/>
                      </div>
                     <div className="col-md-2">
-                        <Button variant = "success" className="form-control" type = "submit">
-                            <span className="fa fa-paper-plane" aria-hidden="true"> &nbsp;&nbsp;ADD</span>
+                        <Button variant = "success" className="form-control">
+                            <span className="fa fa-paper-plane" aria-hidden="true"> &nbsp;ADD</span>
                         </Button>
                         
                      </div>
                      
-                        </form>
+                        </div>
                       </td>
                   </tr>
               </tfoot>}
