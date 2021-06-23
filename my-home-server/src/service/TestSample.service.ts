@@ -14,34 +14,9 @@ const parse = (val:any,init:number)=>{
          return init;
     }
 }
-const TestSampleService ={
-    createSample: async(req:Request,res:Response)=>{
-        const created = new TestSampleDao(req.body);
-        logger.info(JSON.stringify(created.schema));
 
-        await created.save((err, data) => {
-            if (err) return { suceess: false, err };
-            return { suceess: true ,data};
-          });
-
-    },
-    editSample: async(req:Request,res:Response) =>{
-        const {bno} = req.params;
-        const {content} = req.body;
-        let sampleInfo:any = await TestSampleDao.findOne({bno:parseInt(bno)});
-        const historys = sampleInfo.history as Array<Schema>;
-        const __v :number = (sampleInfo.__v as number) + 1;
-        sampleInfo.history = [];
-        return await TestSampleDao.updateOne({bno:parseInt(bno)},{content, history: historys.concat([sampleInfo]),__v});
-    },
-    removeSample: async(req:Request,res:Response) =>{
-        const bno = parseInt(req.params.bno);
-        return await TestSampleDao.remove({bno})
-    }
-    ,
-    list : async(req:Request,res:Response) =>{
+const getList = async({limit,start}:any)=>{
        const dataCnt = await TestSampleDao.count();
-       const {limit,start}= req.query;
        const limitVal = parse(limit,20);
        const pageCnt = 10;
        const startAt = parse(start,0);
@@ -58,6 +33,37 @@ const TestSampleService ={
            rs.data = await TestSampleDao.find().select("-salt -password").sort("-bno").sort("-addedAt").skip(startAt).limit(Math.min(limitVal*pageCnt,dataCnt-startAt) );
        }
        return rs;
+
+}
+
+const TestSampleService ={
+    createSample: async(req:Request,res:Response)=>{
+        const created = new TestSampleDao(req.body);
+        logger.info(JSON.stringify(created.schema));
+        const rs = await created.save();
+        const list = await getList(req.body);
+        return {rs,list};
+    },
+    editSample: async(req:Request,res:Response) =>{
+        const {bno} = req.params;
+        const {content} = req.body;
+        let sampleInfo:any = await TestSampleDao.findOne({bno:parseInt(bno)});
+        const historys = sampleInfo.history as Array<Schema>;
+        const __v :number = (sampleInfo.__v as number) + 1;
+        sampleInfo.history = [];
+        const rs = await TestSampleDao.updateOne({bno:parseInt(bno)},{content, history: historys.concat([sampleInfo]),__v})
+        const list = await getList(req.body);
+        return {rs,list};
+    },
+    removeSample: async(req:Request,res:Response) =>{
+        const bno = parseInt(req.params.bno);
+        const rs = await TestSampleDao.remove({bno});
+        const list = await getList(req.query);
+        return {rs,list};
+    }
+    ,
+    list : async(req:Request,res:Response) =>{
+       return getList(req.query);
 
     }
     ,

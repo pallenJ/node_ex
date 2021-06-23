@@ -16,4 +16,20 @@ export const addOne = async({writer,content,password}:any)=>{
   }catch(err){
     return err;
   }
+  
+}
+export const pwCheck = async(bno:number|string,password:string)=>{
+  try {
+    return await axios.post(`${serverInfo.BASE_URL}/testSample/pwCheck/${bno}`,{password});
+  } catch (err) {
+    return err;
+  }
+}
+
+export const deleteOne = async(bno:number|string)=>{
+  try {
+    return await axios.post(`${serverInfo.BASE_URL}/testSample/delete/${bno}`);
+  } catch (err) {
+    return err;
+  }
 }
