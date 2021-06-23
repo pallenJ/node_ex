@@ -135,12 +135,15 @@ const TestSample = () => {
                                             ()=>checkPWcallback(_data.bno,(_rs:boolean)=>{
                                                 console.log(modalInfo.type)
                                                 let newModalInfo:any = {};
-                                                if(_rs){
+                                                if (_rs) {
                                                     newModalInfo['content'] = `Article ${_data.bno} delete`;
-                                                    deleteOne(_data.bno as string).then((e:any)=>{
-                                                        setallList(e.data.list.data as never[]);
-                                                        pagingList(e.data.list.data as never[]);
-                                                    })
+                                                    console.log( showCnt * pageLength);
+                                                    deleteOne(_data.bno as string, { startAt: showCnt * pageLength * Math.floor(page / pageLength), limit: showCnt * pageLength })
+                                                        .then((e: any) => {
+                                                            setallList(e.data.list.data as never[]);
+                                                            pagingList(e.data.list.data as never[]);
+                                                            setallCnt(e.data.list.allCount as number);
+                                                        })
                                                 }else{
                                                     newModalInfo['content'] = <p color='red'>password Inconsistency</p>;
                                                 }
@@ -179,11 +182,13 @@ const TestSample = () => {
                                 <div className="col-md-2">
                                     <Button variant="success" className="form-control" onClick={() => {
                                         changeInsert('startAt', Math.floor(page / pageLength) * pageLength * showCnt);
+                                        console.log('startAt:', Math.floor(page / pageLength) * pageLength * showCnt);
                                         changeInsert('limit', showCnt * pageLength);
                                         addOne(insert).then((e:any) => {
                                             changeModalInfo({type:ModalType.alert,content:'New Article Add'});
                                             setshowmodal(true);
                                             setallList(e.data.list.data as never[]);
+                                            setallCnt(e.data.list.allCount as number);
                                             pagingList(e.data.list.data as never[]);
                                         })
                                     }}>
@@ -201,7 +206,7 @@ const TestSample = () => {
             <div className="align-items-center">
 
                 <ReactPaginate
-                    pageCount={Math.floor(allCnt / showCnt)}
+                    pageCount={Math.floor(allCnt / showCnt)+(allCnt % showCnt >0?1:0)}
                     pageRangeDisplayed={3}
                     initialPage={0}
                     activeLinkClassName={""}
@@ -225,6 +230,7 @@ const TestSample = () => {
                     }}
                 />
             </div>
+            <h1> {page} </h1>
             <MyModal
                 info={modalInfo}
                 show={showmodal}

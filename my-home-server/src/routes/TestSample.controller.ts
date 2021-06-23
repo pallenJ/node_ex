@@ -6,7 +6,6 @@ import TestSampleService from './../service/TestSample.service';
 const router = Router();
 router.get('/',async(req:Request,res:Response)=>{
     const rs = res.json(await TestSampleService.list(req,res));
-    logger.info(rs);
     return rs;
 })
 router.post('/add',async(req:Request,res:Response)=>{
@@ -40,6 +39,7 @@ router.patch('/edit/:bno',async(req:Request,res:Response)=>{
 router.post('/delete/:bno',async(req:Request,res:Response)=>{
   try {
     const rs = await TestSampleService.removeSample(req,res);
+    logger.info((rs.list.data as Array<any>).length);
     return res.status(200).send(rs);
   } catch (error) {
     return res.status(500).send(error);
@@ -49,10 +49,7 @@ router.post('/delete/:bno',async(req:Request,res:Response)=>{
 router.post('/pwCheck/:bno',async(req,res)=>{
   try {
 
-    logger.info(req.params.bno);
-    logger.info(req.body.password);
     const rs = await TestSampleService.passwordCheck(req,res);
-    logger.info(rs.success);
     return res.status(200).send(rs);
   } catch (error) {
     return res.status(500).send(error);

@@ -10,13 +10,13 @@ export const getList = async ({start= 0,limit = 20}:any)=>{
     return err;
   }
 }
-export const addOne = async({writer,content,password}:any)=>{
+export const addOne = async({writer,content,password,startAt,limit}:any)=>{
   try{
-    return await axios.post(`${serverInfo.BASE_URL}/testSample/add`,{writer,content,password})
+    return await axios.post(`${serverInfo.BASE_URL}/testSample/add`,{writer,content,password,start:startAt,limit})
   }catch(err){
     return err;
   }
-  
+
 }
 export const pwCheck = async(bno:number|string,password:string)=>{
   try {
@@ -26,9 +26,10 @@ export const pwCheck = async(bno:number|string,password:string)=>{
   }
 }
 
-export const deleteOne = async(bno:number|string)=>{
+export const deleteOne = async(bno:number|string,{startAt,limit}:any)=>{
   try {
-    return await axios.post(`${serverInfo.BASE_URL}/testSample/delete/${bno}`);
+    console.log(limit);
+    return await axios.post(`${serverInfo.BASE_URL}/testSample/delete/${bno}`,{start:startAt,limit});
   } catch (err) {
     return err;
   }

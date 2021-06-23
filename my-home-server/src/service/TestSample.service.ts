@@ -11,14 +11,15 @@ const parse = (val:any,init:number)=>{
         if(!val)throw new Error('undefined');
         return parseInt(val+'');
     } catch (error) {
+        logger.err(error)
          return init;
     }
 }
 
 const getList = async({limit,start}:any)=>{
        const dataCnt = await TestSampleDao.count();
-       const limitVal = parse(limit,20);
        const pageCnt = 10;
+       const limitVal = parse(limit,20*pageCnt);
        const startAt = parse(start,0);
        let rs:any = {
         type:'paging',
@@ -30,7 +31,9 @@ const getList = async({limit,start}:any)=>{
        if(dataCnt<=startAt){
            rs.data = [];
        }else{
-           rs.data = await TestSampleDao.find().select("-salt -password").sort("-bno").sort("-addedAt").skip(startAt).limit(Math.min(limitVal*pageCnt,dataCnt-startAt) );
+           rs.data = await TestSampleDao.find()
+           .select("-salt -password").sort("-bno").sort("-addedAt")
+           .skip(startAt).limit(Math.min(limitVal) );
        }
        return rs;
 
@@ -58,7 +61,7 @@ const TestSampleService ={
     removeSample: async(req:Request,res:Response) =>{
         const bno = parseInt(req.params.bno);
         const rs = await TestSampleDao.remove({bno});
-        const list = await getList(req.query);
+        const list = await getList(req.body);
         return {rs,list};
     }
     ,
