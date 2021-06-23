@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { getList, addOne , pwCheck} from '../service/TestSample.service'
+import { getList, addOne, pwCheck, deleteOne } from '../service/TestSample.service';
 import ReactPaginate from 'react-paginate'
 import { Table, Button } from 'react-bootstrap'
 import dateFormat from "dateformat";
-import { MyModal, ModalType } from "src/util/Dialog";
+import { MyModal, ModalType } from "../util/Dialog";
 const TestSample = () => {
 
     const [page, setpage] = useState(-1);
@@ -14,11 +14,11 @@ const TestSample = () => {
     const [insert, setinsert] = useState({ bno: -1, writer: '', content: '', password: '', startAt: 0, limit: showCnt });
 
     const [showmodal, setshowmodal] = useState(false);
-    const modalInfoInit = { type: ModalType.confirm, theme: 'primary',size : 'sm', confirmNext: () => { }};
+    const modalInfoInit = { theme: 'primary',size : 'sm', confirmNext: () => { }};
     const [modalInfo, setmodalInfo] = useState<any>(modalInfoInit);
-   
 
-    let confirmPW = ''; 
+
+    let confirmPW = '';
 
     const pageLength = 10;
     useEffect(() => {
@@ -32,6 +32,7 @@ const TestSample = () => {
             }
         });
         setmodalInfo(val);
+        console.log(val['type'])
     }
     const changeInsert = (key: string, newValue: any) => {
         setinsert((_val) => {
@@ -49,7 +50,7 @@ const TestSample = () => {
             const limit = showCnt * pageLength;
             const start = showCnt * pageLength * Math.floor(_page / pageLength);
             getList({ start, limit }).then(
-                e => {
+                (e:any) => {
                     const _allCnt = e.data.allCount;
                     setallCnt(_allCnt);
                     setallList(e.data.data)
@@ -68,24 +69,25 @@ const TestSample = () => {
     }
     const checkPWcallback = (_bno:any,next:(_rs:boolean)=>void) => {
         changeModalInfo({
+            type:ModalType.confirm,
             content: (
                 <div className="align-items-center">
                     <div className="col-auto">
                         <label className="col-form-label">Password</label>
                     </div>
                     <div className="col-auto">
-                        <input type="password" className="form-control" 
+                        <input type="password" className="form-control"
                         onChange = {input=>{
                             confirmPW = input.target.value as string;
                             }}/>
                     </div>
-                    
+
                 </div>
-            ), confirmNext: () => { 
+            ), confirmNext: () => {
                 pwCheck(_bno as string,confirmPW).then(
-                    rs =>{
+                    (rs:any) =>{
                         console.log(`rs:${rs.data.success as boolean}`)
-                        next(rs);
+                        next(rs.data.success as boolean);
                     }
                 )
             }
@@ -131,13 +133,19 @@ const TestSample = () => {
                                     <Button variant="danger"
                                         onClick={
                                             ()=>checkPWcallback(_data.bno,(_rs:boolean)=>{
-                                                changeModalInfo({type:ModalType.alert});
-
+                                                console.log(modalInfo.type)
+                                                let newModalInfo:any = {};
                                                 if(_rs){
-                                                    changeModalInfo({content:`Article ${_data.bno} delete`});
+                                                    newModalInfo['content'] = `Article ${_data.bno} delete`;
+                                                    deleteOne(_data.bno as string).then((e:any)=>{
+                                                        setallList(e.data.list.data as never[]);
+                                                        pagingList(e.data.list.data as never[]);
+                                                    })
                                                 }else{
-                                                    changeModalInfo({content:"password Inconsistency"});
+                                                    newModalInfo['content'] = <p color='red'>password Inconsistency</p>;
                                                 }
+                                                newModalInfo['type'] = ModalType.alert;
+                                                changeModalInfo(newModalInfo);
                                                 setshowmodal(true);
                                             })
                                         }
@@ -172,10 +180,11 @@ const TestSample = () => {
                                     <Button variant="success" className="form-control" onClick={() => {
                                         changeInsert('startAt', Math.floor(page / pageLength) * pageLength * showCnt);
                                         changeInsert('limit', showCnt * pageLength);
-                                        addOne(insert).then(e => {
+                                        addOne(insert).then((e:any) => {
+                                            changeModalInfo({type:ModalType.alert,content:'New Article Add'});
                                             setshowmodal(true);
                                             setallList(e.data.list.data as never[]);
-                                            pagingList(e.data.list.data as never[])
+                                            pagingList(e.data.list.data as never[]);
                                         })
                                     }}>
                                         <span className="fa fa-paper-plane" aria-hidden="true"> &nbsp;ADD</span>
