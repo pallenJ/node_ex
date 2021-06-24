@@ -5,6 +5,7 @@ import { Table, Button } from 'react-bootstrap'
 import {dateFomatArticle} from "../util/DateUtil";
 import { MyModal, ModalType } from "../util/Dialog";
 import dateFormat from "dateformat";
+import {setutils,showHistory} from "src/element/TestSample.element";
 const TestSample = (props:any) => {
 
     const [page, setpage] = useState(-1);
@@ -18,13 +19,14 @@ const TestSample = (props:any) => {
     const modalInfoInit = { theme: 'primary',size : 'md', confirmNext: () => { }};
     const [modalInfo, setmodalInfo] = useState<any>(modalInfoInit);
     
-    const [fncs, setfncs] = useState<any>({});
+   
 
     let confirmPW = '';
 
     const pageLength = 10;
     useEffect(() => {
-        setfncs({setpage,setshowCnt,setallList,setallCnt,setlist,setinsert,setshowmodal,setmodalInfo});
+        setutils({setpage,setshowCnt,setallList,setallCnt,setlist,setinsert,setshowmodal,setmodalInfo,
+            changeModalInfo,changeInsertOne,changeInsert,setShowList,pagingList,checkPWcallback});
         setShowList(0);
     }, [])
     const changeModalInfo = (val: any) => {
@@ -221,59 +223,7 @@ const TestSample = (props:any) => {
                         </td>
                     </tr>
     )
-    const showHistory = (_data:any)=>{
-        changeInsert({ bno: -1, writer: '', content: '', password: ''});
-        const temp = {..._data};
-        console.log(temp.history as never[])
-        delete temp.history;
-        const historyList = 
-        <div>
-            <Table size = 'sm' className = 'col-md-6' style={{width:'50%'}}>
-                <thead>
-                    <tr>
-                        <th className='table-dark col-md-3 h4'>
-                        Writer
-                        </th>
-                        <td className = 'col-auto h4'>
-                                {_data.writer}     
-                        </td>
-                    </tr>
-                </thead>
-            </Table>
-        <hr/>
-            
-                <Table>
-                    <thead>
-                        <tr className='table-secondary'>
-                            <th style = {{width:'65%'}} className='text-center'>
-                                content
-                            </th>
-                            <th>
-                                editedAt
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {((_data.history as never[]).concat(temp)).map((e:any) => 
-                        <tr>
-                            <td className='text-center'>
-                                {e.content}
-                            </td>
-                            <td>
-                                {dateFormat(e.editedAt as string,'yyyy-mm-dd H:MM:ss')}
-                            </td>
-                        </tr>    
-                    )}
-                    </tbody>
-                </Table>
-            
-            </div>;
-        //historyList.forEach(e=>console.log(e));
-        changeModalInfo({type:ModalType.alert,content:<div>{historyList}</div>,theme:'secondary',title:`History of Article ${_data.bno}`});
-        setshowmodal(true);
-    }
-    //showModal(false);
-    //list.map(e =><pre>{JSON.stringify(e)}</pre>)
+    
     return (
 
         <div className="container text-center">
