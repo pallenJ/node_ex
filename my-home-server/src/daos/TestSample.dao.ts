@@ -11,8 +11,8 @@ let TestSampleSchema = new Schema({
     bno:{type:Number , defult:0},
     writer:{type:String,required:true},
     content:{type:String, required:true},
-    addedAt:{type:Date,default:new Date()},
-    editedAt:{type:Date,default:new Date()},
+    addedAt:{type:Date,default:new Date(Date.now())},
+    editedAt:{type:Date,default:new Date(Date.now())},
     password:{type: String,required:true},
     salt:{type:String},
     history:{type:Array,default:[]}
@@ -22,7 +22,7 @@ TestSampleSchema.pre('save',function(next){
     const hashedPwd = bcrypt.hashSync(this.get("password",String),salt );
     this.set("salt",salt);
     this.set("password",hashedPwd);
-    
+    logger.info(new Date(Date.now()));
     next();
 });
 TestSampleSchema.pre('updateOne',function (next) {

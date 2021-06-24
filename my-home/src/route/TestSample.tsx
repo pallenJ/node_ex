@@ -27,7 +27,8 @@ const TestSample = () => {
         setutils({setpage,setshowCnt,setallList,setallCnt,setlist,setinsert,setshowmodal,setmodalInfo,
             changeModalInfo,changeInsertOne,changeInsert,setShowList,pagingList,checkPWcallback});
         setShowList(0);
-    }, [])
+    }, []);
+    /* change functions */
     const changeModalInfo = (val: any) => {
         const valKeys = Object.keys(val);
         Object.keys(modalInfo).forEach(e => {
@@ -57,7 +58,8 @@ const TestSample = () => {
             return val as any;
         });
     }
-
+    /* change functions end */
+    /* elements */
     const setShowList = (_page = page, force = false) => {
         const otherView = Math.floor(page / pageLength) !== Math.floor(_page / pageLength) || force;
 
@@ -82,6 +84,7 @@ const TestSample = () => {
         const endAt = Math.min(showCnt, Math.max(0, dataList.length - startAt)) + startAt;
         setlist(dataList.slice(startAt, endAt));
     }
+    
     const checkPWcallback = (_bno:any,next:(_rs:boolean)=>void) => {
         changeModalInfo({
             type:ModalType.confirm,
@@ -116,8 +119,6 @@ const TestSample = () => {
         })
         setshowmodal(true);
     };
-    const headers = ['bno', 'writer', 'content', 'addedAt', 'editedAt'];
-    const tdSizes: { [index: string]: number } = { 'bno': 5, 'writer': 20, 'content': 30, 'addedAt': 15, 'editedAt': 15 };
     const rowData = (_data:any)=>(<tr>
         {headers.map(e =>
             <td style={{ width: `${tdSizes[e]}%` }}>
@@ -173,6 +174,51 @@ const TestSample = () => {
             > <span className="fa fa fa-trash" aria-hidden="true"></span> </Button>
         </td>
     </tr>)
+    const addRow = ()=>{
+        return(<tr>
+            <th>
+                NEW
+            </th>
+            <td colSpan={5}>
+                <div className="row g-3" >
+                    <div className="col-md-2">
+                        <input type="text" className="form-control" id="writer" name="writer" placeholder="writer"
+                            onChange={e => changeInsertOne('writer', e.target.value)} 
+                            defaultValue = {insert.bno as number > -1?'':insert.writer} disabled = {insert.bno as number > -1}/>
+                    </div>
+                    <div className="col-md-5">
+                        <input type="text" className="form-control" id="content" name="content" placeholder="Content"
+                            onChange={e => changeInsertOne('content', e.target.value)} 
+                            defaultValue = {insert.bno as number > -1?'':insert.content} disabled = {insert.bno as number > -1} 
+                        />
+                    </div>
+                    <div className="col-md-3">
+                        <input type="password" className="form-control" id="password" name="password" placeholder="Password"
+                            onChange={e => changeInsertOne('password', e.target.value)} 
+                            defaultValue = {insert.bno as number > -1?undefined:insert.password} disabled = {insert.bno as number > -1}/>
+                    </div>
+                    <div className="col-md-2">
+                        <Button variant="success" className="form-control" onClick={() => {
+                            changeInsertOne('start', Math.floor(page / pageLength) * pageLength * showCnt);
+                            console.log('start:', Math.floor(page / pageLength) * pageLength * showCnt);
+                            changeInsertOne('limit', showCnt * pageLength);
+                            addOne(insert).then((e:any) => {
+                                changeModalInfo({type:ModalType.alert,content:'New Article Add'});
+                                setshowmodal(true);
+                                setallList(e.data.list.data as never[]);
+                                setallCnt(e.data.list.allCount as number);
+                                pagingList(e.data.list.data as never[]);
+                            })
+                        }}>
+                            <span className="fa fa-paper-plane" aria-hidden="true"> &nbsp;ADD</span>
+                        </Button>
+
+                    </div>
+
+                </div>
+            </td>
+        </tr>);
+    }
     const editRow = (_data:any)=>(
         <tr className = 'table-secondary'>
                         <th>
@@ -222,6 +268,11 @@ const TestSample = () => {
                         </td>
                     </tr>
     )
+    /* elements end*/
+    /* values */
+    const headers = ['bno', 'writer', 'content', 'addedAt', 'editedAt'];
+    const tdSizes: { [index: string]: number } = { 'bno': 5, 'writer': 20, 'content': 30, 'addedAt': 15, 'editedAt': 15 };
+    
     
     return (
 
@@ -249,49 +300,7 @@ const TestSample = () => {
 
                 </tbody>
                 {<tfoot className='table-dark'>
-                    <tr>
-                        <th>
-                            NEW
-                        </th>
-                        <td colSpan={5}>
-                            <div className="row g-3" >
-                                <div className="col-md-2">
-                                    <input type="text" className="form-control" id="writer" name="writer" placeholder="writer"
-                                        onChange={e => changeInsertOne('writer', e.target.value)} 
-                                        defaultValue = {insert.bno as number > -1?'':insert.writer} disabled = {insert.bno as number > -1}/>
-                                </div>
-                                <div className="col-md-5">
-                                    <input type="text" className="form-control" id="content" name="content" placeholder="Content"
-                                        onChange={e => changeInsertOne('content', e.target.value)} 
-                                        defaultValue = {insert.bno as number > -1?'':insert.content} disabled = {insert.bno as number > -1} 
-                                    />
-                                </div>
-                                <div className="col-md-3">
-                                    <input type="password" className="form-control" id="password" name="password" placeholder="Password"
-                                        onChange={e => changeInsertOne('password', e.target.value)} 
-                                        defaultValue = {insert.bno as number > -1?undefined:insert.password} disabled = {insert.bno as number > -1}/>
-                                </div>
-                                <div className="col-md-2">
-                                    <Button variant="success" className="form-control" onClick={() => {
-                                        changeInsertOne('start', Math.floor(page / pageLength) * pageLength * showCnt);
-                                        console.log('start:', Math.floor(page / pageLength) * pageLength * showCnt);
-                                        changeInsertOne('limit', showCnt * pageLength);
-                                        addOne(insert).then((e:any) => {
-                                            changeModalInfo({type:ModalType.alert,content:'New Article Add'});
-                                            setshowmodal(true);
-                                            setallList(e.data.list.data as never[]);
-                                            setallCnt(e.data.list.allCount as number);
-                                            pagingList(e.data.list.data as never[]);
-                                        })
-                                    }}>
-                                        <span className="fa fa-paper-plane" aria-hidden="true"> &nbsp;ADD</span>
-                                    </Button>
-
-                                </div>
-
-                            </div>
-                        </td>
-                    </tr>
+                    {addRow()}
                 </tfoot>}
             </Table>
             <hr />
