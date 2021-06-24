@@ -42,7 +42,6 @@ const getList = async({limit,start}:any)=>{
 const TestSampleService ={
     createSample: async(req:Request,res:Response)=>{
         const created = new TestSampleDao(req.body);
-        logger.info(JSON.stringify(created.schema));
         const rs = await created.save();
         const list = await getList(req.body);
         return {rs,list};
@@ -61,8 +60,6 @@ const TestSampleService ={
     removeSample: async(req:Request,res:Response) =>{
         const bno = parseInt(req.params.bno);
         const rs = await TestSampleDao.remove({bno});
-        logger.info(req.body.start);
-        logger.info(req.body.limit);
         const list = await getList(req.body);
         return {rs,list};
     }
@@ -75,7 +72,6 @@ const TestSampleService ={
     passwordCheck:async(req:Request,res:Response)=>{
         const {bno} = req.params;
         const {password} = req.body;
-        logger.info(bno+'/'+password)
         const sampleInfo:any = await TestSampleDao.findOne({bno:parseInt(bno)}).select('password');
         if(sampleInfo == null){
             return {success:false , describe:'article is not exist'};

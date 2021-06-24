@@ -25,7 +25,6 @@ TestSampleSchema.pre('save',function(next){
     this.set("password",hashedPwd);
     this.set('addedAt',currentDate)
     this.set('editedAt',currentDate)
-    logger.info('====================='+this.get('addedAt'));
     next();
 });
 TestSampleSchema.pre('updateOne',function (next) {
