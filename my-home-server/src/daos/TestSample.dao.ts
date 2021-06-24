@@ -6,23 +6,26 @@ import bcrypt from 'bcrypt';
 const incre_connection = mongoose.createConnection(`${dbInfo.mongoDBUrl}/myHome`);
 
 autoIncrement.initialize(incre_connection);
-
-let TestSampleSchema = new Schema({
+let currentDate = new Date();
+const TestSampleSchema = new Schema({
     bno:{type:Number , defult:0},
     writer:{type:String,required:true},
     content:{type:String, required:true},
-    addedAt:{type:Date,default:new Date(Date.now())},
-    editedAt:{type:Date,default:new Date(Date.now())},
+    addedAt:{type:Date,default:currentDate},
+    editedAt:{type:Date,default:currentDate},
     password:{type: String,required:true},
     salt:{type:String},
     history:{type:Array,default:[]}
 });
 TestSampleSchema.pre('save',function(next){
+    currentDate = new Date();
     const salt = bcrypt.genSaltSync(10);
     const hashedPwd = bcrypt.hashSync(this.get("password",String),salt );
     this.set("salt",salt);
     this.set("password",hashedPwd);
-    logger.info(new Date(Date.now()));
+    this.set('addedAt',currentDate)
+    this.set('editedAt',currentDate)
+    logger.info('====================='+this.get('addedAt'));
     next();
 });
 TestSampleSchema.pre('updateOne',function (next) {
