@@ -4,9 +4,8 @@ import ReactPaginate from 'react-paginate'
 import { Table, Button } from 'react-bootstrap'
 import {dateFomatArticle} from "../util/DateUtil";
 import { MyModal, ModalType } from "../util/Dialog";
-import dateFormat from "dateformat";
-import {setutils,showHistory} from "src/element/TestSample.element";
-const TestSample = (props:any) => {
+import {setutils,showHistory} from "../element/TestSample.element";
+const TestSample = () => {
 
     const [page, setpage] = useState(-1);
     const [showCnt, setshowCnt] = useState(10)
