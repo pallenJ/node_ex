@@ -5,10 +5,10 @@ import logger from '@shared/Logger';
 import bcrypt from 'bcrypt';
 import { Schema } from "mongoose";
 
-const parse = (val:any,init:number)=>{
+const parse = (val:any,init:number,valName = '')=>{
 
     try {
-        if(!val)throw new Error('undefined');
+        if(val!==0 && !val)throw new Error(`${valName} undefined`);
         return parseInt(val+'');
     } catch (error) {
         logger.err(error)
@@ -19,8 +19,8 @@ const parse = (val:any,init:number)=>{
 const getList = async({limit,start}:any)=>{
        const dataCnt = await TestSampleDao.count();
        const pageCnt = 10;
-       const limitVal = parse(limit,20*pageCnt);
-       const startAt = parse(start,0);
+       const limitVal = parse(limit,10*pageCnt,'limit');
+       const startAt = parse(start,0,'start');
        let rs:any = {
         type:'paging',
         limit:limitVal,
@@ -50,7 +50,7 @@ const TestSampleService ={
     editSample: async(req:Request,res:Response) =>{
         const {bno} = req.params;
         const {content} = req.body;
-        let sampleInfo:any = await TestSampleDao.findOne({bno:parseInt(bno)});
+        let sampleInfo:any = await TestSampleDao.findOne({bno:parseInt(bno)}).select("-salt -password -addedAt");
         const historys = sampleInfo.history as Array<Schema>;
         const __v :number = (sampleInfo.__v as number) + 1;
         sampleInfo.history = [];
@@ -61,6 +61,8 @@ const TestSampleService ={
     removeSample: async(req:Request,res:Response) =>{
         const bno = parseInt(req.params.bno);
         const rs = await TestSampleDao.remove({bno});
+        logger.info(req.body.start);
+        logger.info(req.body.limit);
         const list = await getList(req.body);
         return {rs,list};
     }
@@ -73,6 +75,7 @@ const TestSampleService ={
     passwordCheck:async(req:Request,res:Response)=>{
         const {bno} = req.params;
         const {password} = req.body;
+        logger.info(bno+'/'+password)
         const sampleInfo:any = await TestSampleDao.findOne({bno:parseInt(bno)}).select('password');
         if(sampleInfo == null){
             return {success:false , describe:'article is not exist'};

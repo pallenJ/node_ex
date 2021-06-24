@@ -36,7 +36,7 @@ router.patch('/edit/:bno',async(req:Request,res:Response)=>{
   }
 });
 
-router.post('/delete/:bno',async(req:Request,res:Response)=>{
+router.delete('/delete/:bno',async(req:Request,res:Response)=>{
   try {
     const rs = await TestSampleService.removeSample(req,res);
     logger.info((rs.list.data as Array<any>).length);

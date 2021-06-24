@@ -38,9 +38,9 @@ export const MyModal = (props: any) => {
         <Modal.Title>{getValue('title', 'Modal Title')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>
+        <div>
           {getValue<any>('content', '')}
-        </p>
+        </div>
       </Modal.Body>
 
       <Modal.Footer>
