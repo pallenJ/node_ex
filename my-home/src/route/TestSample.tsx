@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import service from '../service/TestSample.service';
 import ReactPaginate from 'react-paginate'
-import { Table, Button } from 'react-bootstrap'
+import { Table, Button,Row,Col, FormControl,InputGroup  } from 'react-bootstrap'
 import {dateFomatArticle} from "../util/DateUtil";
 import { MyModal, ModalType } from "../util/Dialog";
 import dateFormat from "dateformat";
+import { setStates,searchFunc } from "../functions/TestSample.functions";
 
 const TestSample = () => {
 
@@ -18,11 +19,14 @@ const TestSample = () => {
     const [showmodal, setshowmodal] = useState(false);
     const modalInfoInit = { theme: 'primary',size : 'md', confirmNext: () => { }};
     const [modalInfo, setmodalInfo] = useState<any>(modalInfoInit);
-    
+    const [search, setsearch] = useState<any>({keyword:'content|writer',search:''});
+
     let confirmPW = '';
+    const [nowSearched, setnowSearched] = useState(false);
 
     const pageLength = 10;
     useEffect(() => {
+        setStates({setsearch,setallList,pagingList,showCnt,pageLength,setallCnt})
         setShowList(page<0? 0:page);
     }, []);
     /* change functions */
@@ -53,20 +57,38 @@ const TestSample = () => {
             return val as any;
         });
     }
+    const changeSearchOne = (_key:string,_val:any) =>{
+        let temp = {...search};
+        temp[_key] = _val;
+        setsearch(temp);
+    }
+    const changeSearch = (val:any) =>{
+        const newKeys = Object.keys(val);
+        Object.keys(search).forEach(_key=>{
+            if(!newKeys.includes(_key)){
+                val[_key] = search[_key];
+            }
+        });
+        setsearch(val);
+        
+    }
     /* change functions end */
     /* elements */
     const setShowList = (_page = page, force = false) => {
         const otherView = Math.floor(page / pageLength) !== Math.floor(_page / pageLength) || force;
-
+        if(force){
+            setsearch({keyword:'content|writer',search:''});
+        }
         if (otherView) {
             const limit = showCnt * pageLength;
             const start = showCnt * pageLength * Math.floor(_page / pageLength);
-            service.getList({ start, limit }).then(
-                (e:any) => {
-                    const _allCnt = e.data.allCount;
+            console.log(start,'/',limit)
+            service.getList(force?{start, limit,keyword:'writer|content'}:{ start, limit, ...search }).then(
+                (rs:any) => {
+                    const _allCnt = rs.data.allCount;
                     setallCnt(_allCnt);
-                    setallList(e.data.data)
-                    pagingList(e.data.data as Array<any>, _page, _allCnt);
+                    setallList(rs.data.data)
+                    pagingList(rs.data.data as Array<any>, _page, _allCnt);
                 }
             ).catch((err) => console.error(err))
         } else {
@@ -309,7 +331,36 @@ const TestSample = () => {
         changeModalInfo({type:ModalType.alert,content:<div>{historyList}</div>,theme:'secondary',title:`History of Article ${_data.bno}`});
         setshowmodal(true);
     }
-
+    const pagination = <ReactPaginate
+    pageCount={Math.floor(allCnt / showCnt)+(allCnt % showCnt >0?1:0)}
+    pageRangeDisplayed={3}
+    initialPage={page<0?0:page}
+    activeLinkClassName={"bg-dark text-white"}
+    disabledClassName={""}
+    extraAriaContext={"Previous"}
+    marginPagesDisplayed={1}
+    breakClassName={"page-item"}
+    breakLinkClassName={"page-link text-dark"}
+    previousLabel={"prev"}
+    nextLabel={"next"}
+    pageClassName={"Page navigation"}
+    containerClassName={"pagination form-group"}
+    pageLinkClassName={`page-link text-dark`}
+    previousClassName={"page-link"}
+    nextClassName={"page-link text-dark"}
+    activeClassName={"page-item active "}
+    previousLinkClassName={"page-item text-dark"}
+    nextLinkClassName={"page-item text-dark"}
+    onPageChange={(data) => {
+        setShowList(data.selected)
+        
+    }}
+    onPageActive = {(data)=>{
+        if(data.selected !== page){
+            console.log(data.selected ,'/', page);
+        }
+    }}
+/>
     /* elements end*/
     /* values */
     const headers = ['bno', 'writer', 'content', 'addedAt', 'editedAt'];
@@ -317,8 +368,33 @@ const TestSample = () => {
     
      
     return (
-
         <div className="container text-center">
+ 
+  
+ <h1>{nowSearched?'a':'b'}</h1>
+  <Row className = 'd-flex justify-content-end' sm={"12"}>
+      <Col className = 'd-flex justify-content-start'>
+          {
+              nowSearched?
+              (<Button variant = 'light' onClick={()=>{setShowList(0,true); setpage(0); setnowSearched(false)}}>
+                 All List
+                </Button>):null
+          }
+          
+      </Col>
+    <Col sm = {4}>
+        <InputGroup>
+        <FormControl type = 'search' className = 'form-outline' onChange = {(e)=>{changeSearchOne('search',e.target.value)}}>
+            
+            </FormControl>
+            <Button className = 'fas fa-search' variant = 'dark' onClick = {()=>{searchFunc(search);setpage(0); setnowSearched(true);}}/>
+        </InputGroup>
+        
+    </Col>
+
+  </Row>
+
+
             <hr />
             <Table className="" size="sm" variant="table">
 
@@ -346,42 +422,15 @@ const TestSample = () => {
                 </tfoot>}
             </Table>
             <hr />
-            <div className="align-items-center">
-
-                <ReactPaginate
-                    pageCount={Math.floor(allCnt / showCnt)+(allCnt % showCnt >0?1:0)}
-                    pageRangeDisplayed={3}
-                    initialPage={0}
-                    activeLinkClassName={"bg-dark text-white"}
-                    disabledClassName={""}
-                    extraAriaContext={"Previous"}
-                    marginPagesDisplayed={1}
-                    breakClassName={"page-item"}
-                    breakLinkClassName={"page-link text-dark"}
-                    previousLabel={"prev"}
-                    nextLabel={"next"}
-                    pageClassName={"Page navigation"}
-                    containerClassName={"pagination"}
-                    pageLinkClassName={`page-link text-dark`}
-                    previousClassName={"page-link"}
-                    nextClassName={"page-link text-dark"}
-                    activeClassName={"page-item active "}
-                    previousLinkClassName={"page-item text-dark"}
-                    nextLinkClassName={"page-item text-dark"}
-                    onPageChange={(data) => {
-                        setShowList(data.selected)
-                    }}
-                    
-                />
-            </div>
            
+                {pagination}
+                
             <MyModal
                 info={modalInfo}
                 size={modalInfo.size}
                 show={showmodal}
                 onHide={() => { setshowmodal(false); setmodalInfo(modalInfoInit);}}
             ></MyModal>
-
         </div>
     );
 }

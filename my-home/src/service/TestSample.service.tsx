@@ -6,9 +6,9 @@ import serverInfo from '../serverInfo.json'
 
 
 export default {
-  getList : async ({start= 0,limit = 20}:any)=>{
+  getList : async (params:any)=>{
     try {
-      return await axios.get(`${serverInfo.BASE_URL}/testSample`, { params: { start, limit } });
+      return await axios.get(`${serverInfo.BASE_URL}/testSample`, { params});
     } catch (err) {
       return err;
     }
