@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { getList, addOne, pwCheck, deleteOne,edit } from '../service/TestSample.service';
+import service  from '../service/TestSample.service';
 import ReactPaginate from 'react-paginate'
 import { Table, Button } from 'react-bootstrap'
 import {dateFomatArticle} from "../util/DateUtil";
 import { MyModal, ModalType } from "../util/Dialog";
-import {setutils,showHistory} from "../element/TestSample.element";
+import {setUtils,setValues,rowData} from "../element/TestSample.elements";
+import {headers,tdSizes,modalInfoInit} from "../element/TestSample.consts";
 const TestSample = () => {
 
     const [page, setpage] = useState(-1);
@@ -15,7 +16,7 @@ const TestSample = () => {
     const [insert, setinsert] = useState<any>({ bno: -1, writer: '', content: '', password: '', start: 0, limit: showCnt });
 
     const [showmodal, setshowmodal] = useState(false);
-    const modalInfoInit = { theme: 'primary',size : 'md', confirmNext: () => { }};
+    
     const [modalInfo, setmodalInfo] = useState<any>(modalInfoInit);
     
    
@@ -24,8 +25,9 @@ const TestSample = () => {
 
     const pageLength = 10;
     useEffect(() => {
-        setutils({setpage,setshowCnt,setallList,setallCnt,setlist,setinsert,setshowmodal,setmodalInfo,
+        setUtils({setpage,setshowCnt,setallList,setallCnt,setlist,setinsert,setshowmodal,setmodalInfo,
             changeModalInfo,changeInsertOne,changeInsert,setShowList,pagingList,checkPWcallback});
+        setValues({page,showCnt,allList,allCnt,list,insert,showmodal,modalInfo})
         setShowList(0);
     }, []);
     /* change functions */
@@ -66,7 +68,7 @@ const TestSample = () => {
         if (otherView) {
             const limit = showCnt * pageLength;
             const start = showCnt * pageLength * Math.floor(_page / pageLength);
-            getList({ start, limit }).then(
+            service.getList({ start, limit }).then(
                 (e:any) => {
                     const _allCnt = e.data.allCount;
                     setallCnt(_allCnt);
@@ -102,7 +104,7 @@ const TestSample = () => {
 
                 </div>
             ), confirmNext: () => {
-                pwCheck(_bno as string,confirmPW).then(
+                service.pwCheck(_bno as string,confirmPW).then(
                     (rs:any) =>{
                         let rsStr:string = (rs as string).toString();
                         console.info(rsStr);
@@ -119,61 +121,7 @@ const TestSample = () => {
         })
         setshowmodal(true);
     };
-    const rowData = (_data:any)=>(<tr>
-        {headers.map(e =>
-            <td style={{ width: `${tdSizes[e]}%` }}>
-                <span className = 'd-inline'>
-
-                {e.endsWith('At') ? dateFomatArticle(_data[e]) : (_data[e])}
-                </span>
-            {(e ==='writer'&&(_data['addedAt'] !== _data['editedAt']))?<p className = 'd-inline text-danger' >[edited]</p>:null}
-            </td>
-        )}
-        <td>
-            <Button variant="outline-secondary" onClick = {()=>showHistory(_data)}> <span className="fa fa-history" aria-hidden="true"></span> </Button>&nbsp;&nbsp;
-            <Button variant="primary"> <span className="fa fa-edit" aria-hidden="true"
-                onClick={
-                    ()=>checkPWcallback(_data.bno,(_rs:boolean)=>{
-                        console.log(`rs:${_rs}`)
-                        if(_rs){
-                            changeInsert(_data);
-                        }else{
-                            let newModalInfo:any = {};
-                            newModalInfo['theme'] = 'danger';
-                            newModalInfo['content'] = <p color='red'>password Inconsistency</p>;
-                            newModalInfo['type'] = ModalType.alert;
-                            changeModalInfo(newModalInfo);
-                            setshowmodal(true);
-                        }
-                    })
-                }
-            ></span> </Button>&nbsp;&nbsp;
-            <Button variant="danger"
-                onClick={
-                    ()=>checkPWcallback(_data.bno,(_rs:boolean)=>{
-                        console.log(modalInfo.type)
-                        let newModalInfo:any = {};
-                        if (_rs) {
-                            newModalInfo['content'] = `Article ${_data.bno} delete`;
-                            console.log( showCnt * pageLength);
-                            deleteOne(_data.bno as string, { start: showCnt * pageLength * Math.floor(page / pageLength), limit: showCnt * pageLength })
-                                .then((e: any) => {
-                                    setallList(e.data.list.data as never[]);
-                                    pagingList(e.data.list.data as never[]);
-                                    setallCnt(e.data.list.allCount as number);
-                                })
-                        }else{
-                            newModalInfo['theme'] = 'danger';
-                            newModalInfo['content'] = <p color='red'>password Inconsistency</p>;
-                        }
-                        newModalInfo['type'] = ModalType.alert;
-                        changeModalInfo(newModalInfo);
-                        setshowmodal(true);
-                    })
-                }
-            > <span className="fa fa fa-trash" aria-hidden="true"></span> </Button>
-        </td>
-    </tr>)
+   
     const addRow = ()=>{
         return(<tr>
             <th>
@@ -202,7 +150,7 @@ const TestSample = () => {
                             changeInsertOne('start', Math.floor(page / pageLength) * pageLength * showCnt);
                             console.log('start:', Math.floor(page / pageLength) * pageLength * showCnt);
                             changeInsertOne('limit', showCnt * pageLength);
-                            addOne(insert).then((e:any) => {
+                            service.addOne(insert).then((e:any) => {
                                 changeModalInfo({type:ModalType.alert,content:'New Article Add'});
                                 setshowmodal(true);
                                 setallList(e.data.list.data as never[]);
@@ -250,7 +198,7 @@ const TestSample = () => {
                                         changeInsertOne('start', Math.floor(page / pageLength) * pageLength * showCnt);
                                         console.log('start:', Math.floor(page / pageLength) * pageLength * showCnt);
                                         changeInsertOne('limit', showCnt * pageLength);
-                                        edit(insert.bno as string,insert).then((e:any) => {
+                                        service.edit(insert.bno as string,insert).then((e:any) => {
                                             changeModalInfo({type:ModalType.alert,content:`Article ${insert.bno} Edited`});
                                             setshowmodal(true);
                                             setallList(e.data.list.data as never[]);
@@ -270,9 +218,7 @@ const TestSample = () => {
     )
     /* elements end*/
     /* values */
-    const headers = ['bno', 'writer', 'content', 'addedAt', 'editedAt'];
-    const tdSizes: { [index: string]: number } = { 'bno': 5, 'writer': 20, 'content': 30, 'addedAt': 15, 'editedAt': 15 };
-    
+
     
     return (
 
