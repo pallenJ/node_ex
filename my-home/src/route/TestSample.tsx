@@ -23,8 +23,7 @@ const TestSample = () => {
 
     const pageLength = 10;
     useEffect(() => {
-        
-        setShowList(0);
+        setShowList(page<0? 0:page);
     }, []);
     /* change functions */
     const changeModalInfo = (val: any) => {
@@ -316,7 +315,7 @@ const TestSample = () => {
     const headers = ['bno', 'writer', 'content', 'addedAt', 'editedAt'];
     const tdSizes: { [index: string]: number } = { 'bno': 5, 'writer': 20, 'content': 30, 'addedAt': 15, 'editedAt': 15 };
     
-    
+     
     return (
 
         <div className="container text-center">
@@ -353,25 +352,26 @@ const TestSample = () => {
                     pageCount={Math.floor(allCnt / showCnt)+(allCnt % showCnt >0?1:0)}
                     pageRangeDisplayed={3}
                     initialPage={0}
-                    activeLinkClassName={""}
+                    activeLinkClassName={"bg-dark text-white"}
                     disabledClassName={""}
                     extraAriaContext={"Previous"}
                     marginPagesDisplayed={1}
-                    breakClassName={"page-item "}
-                    breakLinkClassName={"page-link"}
+                    breakClassName={"page-item"}
+                    breakLinkClassName={"page-link text-dark"}
                     previousLabel={"prev"}
                     nextLabel={"next"}
-                    pageClassName={"Page navigation align-items-center"}
-                    containerClassName={"pagination align-items-center"}
-                    pageLinkClassName={"page-link"}
+                    pageClassName={"Page navigation"}
+                    containerClassName={"pagination"}
+                    pageLinkClassName={`page-link text-dark`}
                     previousClassName={"page-link"}
-                    nextClassName={"page-link"}
-                    activeClassName={"page-item active"}
-                    previousLinkClassName={"page-item"}
-                    nextLinkClassName={"page-item"}
+                    nextClassName={"page-link text-dark"}
+                    activeClassName={"page-item active "}
+                    previousLinkClassName={"page-item text-dark"}
+                    nextLinkClassName={"page-item text-dark"}
                     onPageChange={(data) => {
                         setShowList(data.selected)
                     }}
+                    
                 />
             </div>
            
