@@ -9,11 +9,11 @@ export const dateFomatArticle = (_date: any, compare = true) => {
        if((rsTemp= Math.floor(rsTemp/1000))<60)
             return 'JustNow';
        else if((rsTemp= Math.floor(rsTemp/60))<60)
-            return `${rsTemp} ms ago`
+            return `${rsTemp} m ago`
        else if((rsTemp= Math.floor(rsTemp/60))<24)
-            return `${rsTemp} hs ago`
+            return `${rsTemp} h ago`
        else if((rsTemp= Math.floor(rsTemp/24))<7)
-            return `${rsTemp} ds ago`
+            return `${rsTemp} d ago`
        else if(rsTemp<30)
             return `${Math.floor(rsTemp/7)} wks ago`
        else if(rsTemp<365)

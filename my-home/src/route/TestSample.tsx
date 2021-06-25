@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import service  from '../service/TestSample.service';
+import service from '../service/TestSample.service';
 import ReactPaginate from 'react-paginate'
 import { Table, Button } from 'react-bootstrap'
 import {dateFomatArticle} from "../util/DateUtil";
 import { MyModal, ModalType } from "../util/Dialog";
-import {setUtils,setValues,rowData} from "../element/TestSample.elements";
-import {headers,tdSizes,modalInfoInit} from "../element/TestSample.consts";
+import dateFormat from "dateformat";
+
 const TestSample = () => {
 
     const [page, setpage] = useState(-1);
@@ -16,18 +16,14 @@ const TestSample = () => {
     const [insert, setinsert] = useState<any>({ bno: -1, writer: '', content: '', password: '', start: 0, limit: showCnt });
 
     const [showmodal, setshowmodal] = useState(false);
-    
+    const modalInfoInit = { theme: 'primary',size : 'md', confirmNext: () => { }};
     const [modalInfo, setmodalInfo] = useState<any>(modalInfoInit);
     
-   
-
     let confirmPW = '';
 
     const pageLength = 10;
     useEffect(() => {
-        setUtils({setpage,setshowCnt,setallList,setallCnt,setlist,setinsert,setshowmodal,setmodalInfo,
-            changeModalInfo,changeInsertOne,changeInsert,setShowList,pagingList,checkPWcallback});
-        setValues({page,showCnt,allList,allCnt,list,insert,showmodal,modalInfo})
+        
         setShowList(0);
     }, []);
     /* change functions */
@@ -39,13 +35,11 @@ const TestSample = () => {
             }
         });
         setmodalInfo(val);
-        console.log(val['type'])
     }
     const changeInsertOne = (key: string, newValue: any) => {
         setinsert((_val:any) => {
             const temp = _val as { [index: string]: any };
             temp[key] = newValue
-            //console.log(`newValur of${key}:${newValue}`)
             return temp as any;
         });
     }
@@ -107,7 +101,6 @@ const TestSample = () => {
                 service.pwCheck(_bno as string,confirmPW).then(
                     (rs:any) =>{
                         let rsStr:string = (rs as string).toString();
-                        console.info(rsStr);
                         if(rsStr.includes('Error: Request failed with status code 500')){
                             console.error(rsStr);
                             changeModalInfo({theme: 'danger',type:ModalType.alert,title:'ERROR',content:rsStr});
@@ -121,7 +114,58 @@ const TestSample = () => {
         })
         setshowmodal(true);
     };
-   
+    const rowData = (_data:any)=>(<tr>
+        {headers.map(e =>
+            <td style={{ width: `${tdSizes[e]}%` }}>
+                <span className = 'd-inline'>
+
+                {e.endsWith('At') ? dateFomatArticle(_data[e]) : (_data[e])}
+                </span>
+            {(e ==='writer'&&(_data['addedAt'] !== _data['editedAt']))?<p className = 'd-inline text-danger' >[edited]</p>:null}
+            </td>
+        )}
+        <td>
+            <Button variant="outline-secondary" onClick = {()=>showHistory(_data)}> <span className="fa fa-history" aria-hidden="true"></span> </Button>&nbsp;&nbsp;
+            <Button variant="primary"> <span className="fa fa-edit" aria-hidden="true"
+                onClick={
+                    ()=>checkPWcallback(_data.bno,(_rs:boolean)=>{
+                        if(_rs){
+                            changeInsert(_data);
+                        }else{
+                            let newModalInfo:any = {};
+                            newModalInfo['theme'] = 'danger';
+                            newModalInfo['content'] = <p color='red'>password Inconsistency</p>;
+                            newModalInfo['type'] = ModalType.alert;
+                            changeModalInfo(newModalInfo);
+                            setshowmodal(true);
+                        }
+                    })
+                }
+            ></span> </Button>&nbsp;&nbsp;
+            <Button variant="danger"
+                onClick={
+                    ()=>checkPWcallback(_data.bno,(_rs:boolean)=>{
+                        let newModalInfo:any = {};
+                        if (_rs) {
+                            newModalInfo['content'] = `Article ${_data.bno} delete`;
+                            service.deleteOne(_data.bno as string, { start: showCnt * pageLength * Math.floor(page / pageLength), limit: showCnt * pageLength })
+                                .then((e: any) => {
+                                    setallList(e.data.list.data as never[]);
+                                    pagingList(e.data.list.data as never[]);
+                                    setallCnt(e.data.list.allCount as number);
+                                })
+                        }else{
+                            newModalInfo['theme'] = 'danger';
+                            newModalInfo['content'] = <p color='red'>password Inconsistency</p>;
+                        }
+                        newModalInfo['type'] = ModalType.alert;
+                        changeModalInfo(newModalInfo);
+                        setshowmodal(true);
+                    })
+                }
+            > <span className="fa fa fa-trash" aria-hidden="true"></span> </Button>
+        </td>
+    </tr>)
     const addRow = ()=>{
         return(<tr>
             <th>
@@ -148,7 +192,6 @@ const TestSample = () => {
                     <div className="col-md-2">
                         <Button variant="success" className="form-control" onClick={() => {
                             changeInsertOne('start', Math.floor(page / pageLength) * pageLength * showCnt);
-                            console.log('start:', Math.floor(page / pageLength) * pageLength * showCnt);
                             changeInsertOne('limit', showCnt * pageLength);
                             service.addOne(insert).then((e:any) => {
                                 changeModalInfo({type:ModalType.alert,content:'New Article Add'});
@@ -216,9 +259,63 @@ const TestSample = () => {
                         </td>
                     </tr>
     )
+    const showHistory = (_data:any)=>{
+        changeInsert({ bno: -1, writer: '', content: '', password: ''});
+        const temp = {..._data};
+        console.log(temp.history as never[])
+        delete temp.history;
+        const historyList = 
+        <div>
+            <Table size = 'sm' className = 'col-md-6' style={{width:'50%'}}>
+                <thead>
+                    <tr>
+                        <th className='table-dark col-md-3 h4'>
+                        Writer
+                        </th>
+                        <td className = 'col-auto h4'>
+                                {_data.writer}     
+                        </td>
+                    </tr>
+                </thead>
+            </Table>
+        <hr/>
+            
+                <Table>
+                    <thead>
+                        <tr className='table-secondary'>
+                            <th style = {{width:'65%'}} className='text-center'>
+                                content
+                            </th>
+                            <th>
+                                editedAt
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {((_data.history as never[]).concat(temp)).map((e:any) => 
+                        <tr>
+                            <td className='text-center'>
+                                {e.content}
+                            </td>
+                            <td>
+                                {dateFormat(e.editedAt as string,'yyyy-mm-dd H:MM:ss')}
+                            </td>
+                        </tr>    
+                    )}
+                    </tbody>
+                </Table>
+            
+            </div>;
+        //historyList.forEach(e=>console.log(e));
+        changeModalInfo({type:ModalType.alert,content:<div>{historyList}</div>,theme:'secondary',title:`History of Article ${_data.bno}`});
+        setshowmodal(true);
+    }
+
     /* elements end*/
     /* values */
-
+    const headers = ['bno', 'writer', 'content', 'addedAt', 'editedAt'];
+    const tdSizes: { [index: string]: number } = { 'bno': 5, 'writer': 20, 'content': 30, 'addedAt': 15, 'editedAt': 15 };
+    
     
     return (
 
