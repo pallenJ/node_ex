@@ -82,7 +82,6 @@ const TestSample = () => {
         if (otherView) {
             const limit = showCnt * pageLength;
             const start = showCnt * pageLength * Math.floor(_page / pageLength);
-            console.log(start,'/',limit)
             service.getList(force?{start, limit,keyword:'writer|content'}:{ start, limit, ...search }).then(
                 (rs:any) => {
                     const _allCnt = rs.data.allCount;
@@ -260,7 +259,6 @@ const TestSample = () => {
                                 <div className="col-md-2">
                                     <Button variant="primary" className="form-control" onClick={() => {
                                         changeInsertOne('start', Math.floor(page / pageLength) * pageLength * showCnt);
-                                        console.log('start:', Math.floor(page / pageLength) * pageLength * showCnt);
                                         changeInsertOne('limit', showCnt * pageLength);
                                         service.edit(insert.bno as string,insert).then((e:any) => {
                                             changeModalInfo({type:ModalType.alert,content:`Article ${insert.bno} Edited`});
@@ -283,7 +281,6 @@ const TestSample = () => {
     const showHistory = (_data:any)=>{
         changeInsert({ bno: -1, writer: '', content: '', password: ''});
         const temp = {..._data};
-        console.log(temp.history as never[])
         delete temp.history;
         const historyList = 
         <div>
@@ -353,13 +350,8 @@ const TestSample = () => {
     nextLinkClassName={"page-item text-dark"}
     onPageChange={(data) => {
         setShowList(data.selected)
-        
     }}
-    onPageActive = {(data)=>{
-        if(data.selected !== page){
-            console.log(data.selected ,'/', page);
-        }
-    }}
+    forcePage = {page}
 />
     /* elements end*/
     /* values */
