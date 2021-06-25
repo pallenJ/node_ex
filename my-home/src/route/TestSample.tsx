@@ -350,6 +350,7 @@ const TestSample = () => {
     nextLinkClassName={"page-item text-dark"}
     onPageChange={(data) => {
         setShowList(data.selected)
+        
     }}
     forcePage = {page}
 />
