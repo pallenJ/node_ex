@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Nav, Navbar, Card, CardGroup,Row,Col } from "react-bootstrap";
 import { Route } from "react-router-dom";
-import TestSample from "./TestSample";
+import TestSample from '../route/TestSample';
 
 const App = () => {
 

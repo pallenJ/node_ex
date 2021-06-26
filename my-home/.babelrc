@@ -1,3 +1,15 @@
 {
-    "presets": ["@babel/preser-env"]
+    "presets": ["@babel/preser-env"],
+    "plugins": [
+        "transform-react-jsx-source",
+        [
+            "module-resolver",
+            {
+              "alias": {
+                "~/*": "./src"
+              },
+              "cwd": "babelrc"
+            }
+          ]
+    ]
 }

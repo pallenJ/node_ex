@@ -18,7 +18,7 @@ const parse = (val: any, init: number, valName = '') => {
 
 const getList = async (params: any) => {
     const search = (params.search as string)||'';
-    const keyword = (params.keyword as string)||'';
+    const keyword = (params.keyword as string)||'writer|content';
     let searchParam:Array<any> = [];
     keyword.split('|').forEach(e =>{
         let temp:any = {};
