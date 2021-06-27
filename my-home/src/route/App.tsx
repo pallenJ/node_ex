@@ -1,9 +1,12 @@
-import { Container,  Card,Row,Col } from "react-bootstrap";
+import React from "react";
+import { Container, Nav, Navbar, Card, Row,Col } from "react-bootstrap";
 import { Route } from "react-router-dom";
 import TestSample from './TestSample';
 
 const App = () => {
-
+  const data:any = {a:1,b:2,c:3};
+  data.d = 4;//data["d"]=4
+  console.log(data);
     return (
         <div>
             <Route path='/' component={Main} exact />
@@ -17,7 +20,7 @@ const App = () => {
 const pages = [{name:'TestSample', page:<TestSample/>},{name:'none', page:<div/>},{name:'none', page:<div/>},{name:'none', page:<div/>}]
 const Main = () =>
 (
-  <Container >
+  <Container>
         <h1>Main</h1>
         <hr/>
         <Row xs={1} md={1} className="g-4">
