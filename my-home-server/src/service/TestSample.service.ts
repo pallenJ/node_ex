@@ -1,5 +1,4 @@
 import TestSampleDao from "@daos/TestSample.dao";
-import { exception } from "console";
 import { Request, Response } from 'express';
 import logger from '@shared/Logger';
 import bcrypt from 'bcrypt';
