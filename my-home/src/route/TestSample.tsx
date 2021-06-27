@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState,  Dispatch, SetStateAction } from "react";
 import service from '../service/TestSample.service';
 import ReactPaginate from 'react-paginate'
 import { Table, Button, Row, Col, FormControl, InputGroup } from 'react-bootstrap'
 import { dateFomatArticle } from "../util/DateUtil";
 import { MyModal, ModalType } from "../util/Dialog";
 import dateFormat from "dateformat";
-import TestSampleService from "../service/TestSample.service";
 
 const TestSample = () => {
     const [page, setpage] = useState(-1);
@@ -22,56 +21,23 @@ const TestSample = () => {
     const [search, setsearch] = useState<any>({ keyword: 'content|writer', search: '' });
     const [searchString, setsearchString] = useState('');
 
-    let confirmPW = '';
     const [nowSearched, setnowSearched] = useState(false);
 
     const pageLength = 10;
-    useEffect(() => {
-        setShowList(page < 0 ? 0 : page);
-    }, []);
-    /* change functions */
-    const changeModalInfo = (val: any) => {
-        const valKeys = Object.keys(val);
-        Object.keys(modalInfo).forEach(e => {
-            if (!valKeys.includes(e)) {
-                val[e] = modalInfo[e];
-            }
-        });
-        setmodalInfo(val);
-    }
-    const changeInsertOne = (key: string, newValue: any) => {
-        setinsert((_val: any) => {
-            const temp = _val as { [index: string]: any };
-            temp[key] = newValue
-            return temp as any;
-        });
-    }
-    const changeInsert = (val: any) => {
-        const valKeys = Object.keys(val);
-        setinsert((_val: any) => {
-            Object.keys(insert).forEach(_key => {
-                if (!valKeys.includes(_key)) {
-                    val[_key] = insert[_key];
-                }
-            });
-            return val as any;
-        });
-    }
-    const changeSearchOne = (_key: string, _val: any) => {
-        let temp = { ...search };
-        temp[_key] = _val;
-        setsearch(temp);
-    }
-    const changeSearch = (val: any) => {
-        const newKeys = Object.keys(val);
-        Object.keys(search).forEach(_key => {
-            if (!newKeys.includes(_key)) {
-                val[_key] = search[_key];
-            }
-        });
-        setsearch(val);
+    let confirmPW = '';
 
+    /* change functions */
+    const changeState = ([_state,set_state]:[any, Dispatch<SetStateAction<any>>],val:any )=>{
+        const valKeys = Object.keys(val);
+        Object.keys(_state).forEach(e => {
+            if (!valKeys.includes(e)) {
+                val[e] = _state[e];
+            }
+        });
+        set_state(val);
     }
+
+
     /* change functions end */
     /* elements */
     const setShowList = (_page = page, force = false) => {
@@ -101,8 +67,8 @@ const TestSample = () => {
         setlist(dataList.slice(startAt, endAt));
     }
 
-    const checkPWcallback = (_bno: any, next: (_rs: boolean) => void) => {
-        changeModalInfo({
+    const checkPWcallback = (_bno: number|string, next: (_rs: boolean) => void) => {
+        changeState([modalInfo,setmodalInfo],{
             type: ModalType.confirm,
             content: (
                 <div className="align-items-center">
@@ -123,7 +89,7 @@ const TestSample = () => {
                         let rsStr: string = (rs as string).toString();
                         if (rsStr.includes('Error: Request failed with status code 500')) {
                             console.error(rsStr);
-                            changeModalInfo({ theme: 'danger', type: ModalType.alert, title: 'ERROR', content: rsStr });
+                            changeState([modalInfo,setmodalInfo],{ theme: 'danger', type: ModalType.alert, title: 'ERROR', content: rsStr });
                             setshowmodal(true);
                         } else {
                             next(rs.data.success as boolean);
@@ -136,7 +102,7 @@ const TestSample = () => {
     };
     const rowData = (_data: any) => (<tr>
         {headers.map(e =>
-            <td style={{ width: `${tdSizes[e]}%` }}>
+            <td style={{ width: `${tdSizes[e]}%` }} key = {`${e}-${_data[e]}`}>
                 <span className='d-inline'>
 
                     {e.endsWith('At') ? dateFomatArticle(_data[e]) : (_data[e])}
@@ -150,13 +116,13 @@ const TestSample = () => {
                 onClick={
                     () => checkPWcallback(_data.bno, (_rs: boolean) => {
                         if (_rs) {
-                            changeInsert(_data);
+                            changeState([insert,setinsert],_data);
                         } else {
                             let newModalInfo: any = {};
                             newModalInfo['theme'] = 'danger';
                             newModalInfo['content'] = <p color='red'>password Inconsistency</p>;
                             newModalInfo['type'] = ModalType.alert;
-                            changeModalInfo(newModalInfo);
+                            changeState([modalInfo,setmodalInfo],newModalInfo);
                             setshowmodal(true);
                         }
                     })
@@ -179,7 +145,7 @@ const TestSample = () => {
                             newModalInfo['content'] = <p color='red'>password Inconsistency</p>;
                         }
                         newModalInfo['type'] = ModalType.alert;
-                        changeModalInfo(newModalInfo);
+                        changeState([modalInfo,setmodalInfo],newModalInfo);
                         setshowmodal(true);
                     })
                 }
@@ -195,18 +161,18 @@ const TestSample = () => {
                 <div className="row g-3" >
                     <div className="col-md-2">
                         <input type="text" className="form-control" id="writer" name="writer" placeholder="writer"
-                            onChange={e => changeInsertOne('writer', e.target.value)}
+                            onChange={e => changeState([insert,setinsert],{'writer': e.target.value})}
                             defaultValue={insert.bno as number > -1 ? '' : insert.writer} disabled={insert.bno as number > -1} />
                     </div>
                     <div className="col-md-5">
                         <input type="text" className="form-control" id="content" name="content" placeholder="Content"
-                            onChange={e => changeInsertOne('content', e.target.value)}
+                            onChange={e => changeState([insert,setinsert],{'content': e.target.value})}
                             defaultValue={insert.bno as number > -1 ? '' : insert.content} disabled={insert.bno as number > -1}
                         />
                     </div>
                     <div className="col-md-3">
                         <input type="password" className="form-control" id="password" name="password" placeholder="Password"
-                            onChange={e => changeInsertOne('password', e.target.value)}
+                            onChange={e => changeState([insert,setinsert],{'password': e.target.value})}
                             defaultValue={insert.bno as number > -1 ? undefined : insert.password} disabled={insert.bno as number > -1} />
                     </div>
                     <div className="col-md-2">
@@ -216,7 +182,7 @@ const TestSample = () => {
                                 limit: showCnt * pageLength, ...insert, ...search
                             }
                             service.addOne(params).then((e: any) => {
-                                changeModalInfo({ type: ModalType.alert, content: 'New Article Add' });
+                                changeState([modalInfo,setmodalInfo],{ type: ModalType.alert, content: 'New Article Add' });
                                 setshowmodal(true);
                                 setallList(e.data.list.data as never[]);
                                 setallCnt(e.data.list.allCount as number);
@@ -246,7 +212,7 @@ const TestSample = () => {
                     </div>
                     <div className="col-4">
                         <input type="text" className="form-control" id="content" name="content" placeholder="Content"
-                            onChange={e => changeInsertOne('content', e.target.value)}
+                            onChange={e => changeState([insert,setinsert],{'content': e.target.value})}
                             defaultValue={_data.content}
                         />
                     </div>
@@ -266,13 +232,13 @@ const TestSample = () => {
                                 limit: showCnt * pageLength, ...insert, ...search
                             }
                             service.edit(insert.bno as string, params).then((e: any) => {
-                                changeModalInfo({ type: ModalType.alert, content: `Article ${insert.bno} Edited` });
+                                changeState([modalInfo,setmodalInfo],{ type: ModalType.alert, content: `Article ${insert.bno} Edited` });
                                 setshowmodal(true);
                                 setallList(e.data.list.data as never[]);
                                 setallCnt(e.data.list.allCount as number);
                                 pagingList(e.data.list.data as never[]);
 
-                                changeInsert({ bno: -1, writer: '', content: '', password: '', });
+                                changeState([insert,setinsert],{ bno: -1, writer: '', content: '', password: '', });
                             })
                         }}>
                             <span className="fa fa-edit" aria-hidden="true"> &nbsp;EDIT</span>
@@ -285,7 +251,7 @@ const TestSample = () => {
         </tr>
     )
     const showHistory = (_data: any) => {
-        changeInsert({ bno: -1, writer: '', content: '', password: '' });
+        changeState([insert,setinsert],{ bno: -1, writer: '', content: '', password: '' });
         const temp = { ..._data };
         delete temp.history;
         const historyList =
@@ -331,7 +297,7 @@ const TestSample = () => {
 
             </div>;
         //historyList.forEach(e=>console.log(e));
-        changeModalInfo({ type: ModalType.alert, content: <div>{historyList}</div>, theme: 'secondary', title: `History of Article ${_data.bno}` });
+        changeState([modalInfo,setmodalInfo],{ type: ModalType.alert, content: <div>{historyList}</div>, theme: 'secondary', title: `History of Article ${_data.bno}` });
         setshowmodal(true);
     }
     const searchNow = () => {

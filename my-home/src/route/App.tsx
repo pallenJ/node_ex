@@ -1,7 +1,6 @@
-import React from "react";
-import { Container, Nav, Navbar, Card, CardGroup,Row,Col } from "react-bootstrap";
+import { Container,  Card,Row,Col } from "react-bootstrap";
 import { Route } from "react-router-dom";
-import TestSample from '../route/TestSample';
+import TestSample from './TestSample';
 
 const App = () => {
 

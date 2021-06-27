@@ -1,8 +1,9 @@
 import dateFormat from "dateformat";
 export const dateFomatArticle = (_date: any, compare = true) => {
     //console.log(dateFormat(_date,'yyyy-mm-dd H:MM:ss')+'/'+ dateFormat(new Date(),'yyyy-mm-dd H:MM:ss'))
-    
+
     if (compare) {
+
        const timestamp = Date.parse(_date);
        let rsTemp = Date.now() - timestamp;
        const nowDate = new Date();
