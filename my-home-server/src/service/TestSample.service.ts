@@ -51,13 +51,13 @@ const getList = async (params: any) => {
 }
 
 const TestSampleService = {
-    createSample: async (req: Request, res: Response) => {
+    createSample: async (req: Request) => {
         const created = new TestSampleDao(req.body);
         const rs = await created.save();
         const list = await getList(req.body);
         return { rs, list };
     },
-    editSample: async (req: Request, res: Response) => {
+    editSample: async (req: Request) => {
         const { bno } = req.params;
         const { content } = req.body;
         let sampleInfo: any = await TestSampleDao.findOne({ bno: parseInt(bno) }).select("-salt -password -addedAt");
@@ -68,19 +68,19 @@ const TestSampleService = {
         const list = await getList(req.body);
         return { rs, list };
     },
-    removeSample: async (req: Request, res: Response) => {
+    removeSample: async (req: Request) => {
         const bno = parseInt(req.params.bno);
         const rs = await TestSampleDao.remove({ bno });
         const list = await getList(req.body);
         return { rs, list };
     }
     ,
-    list: async (req: Request, res: Response) => {
+    list: async (req: Request) => {
         return getList(req.query);
 
     }
     ,
-    passwordCheck: async (req: Request, res: Response) => {
+    passwordCheck: async (req: Request) => {
         const { bno } = req.params;
         const { password } = req.body;
         const sampleInfo: any = await TestSampleDao.findOne({ bno: parseInt(bno) }).select('password');
