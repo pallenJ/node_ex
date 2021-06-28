@@ -56,7 +56,8 @@ function App() {
         </div>
       </div>
       <button className = 'btn-selected' onClick = {()=>{setselected(null) }}>뒤로가기</button>
-    </div>)
+    </div>
+    )
 
   //infiniteScroll();
   useEffect(() => {
@@ -82,7 +83,7 @@ function App() {
 
             list?.map(
               (e:any) => <li  style = {{userSelect:'text',margin:'20px',listStyle:'none'}} className ='bg-gray-100'>
-                <article onClick={() => { setselected(showDetail(e));}}
+                <article onClick={() => { service.getDetail(e.id as number, post ).then(e=>{setselected(showDetail(e))})}}
               >
                <h3><span style = {{color:'blueviolet'}}> {e.id}</span>&nbsp;<span style={{}}>{e.title}</span></h3>
                <span className = 'pre'>{e.content}</span>
@@ -97,8 +98,6 @@ function App() {
   return (
     <div className="App" style = {{width:'70%', left:'15%',right:'15%',position:'relative'}}>
       <h1 style = {{textAlign:'center'}}>HOMEWORK</h1>
-        {console.log(selected === null)}
-        {console.log(selected)}
         {selected ?? Main}
       <hr />
     </div>

@@ -5,13 +5,19 @@ export default {
     getList : async(params:any, type = "a" )=>{
         try {
 
-            console.log(`${url}/${type}-posts`);
-            console.log(`${JSON.stringify(params)}`);
-            console.log(`${JSON.stringify(params.search)}`);
             return (await axios.get(`${url}/${type}-posts`,{params})).data;
         } catch (err) {
-            console.log(err);
+            console.error(err);
             return err;
         }
-    }    
+    },
+    getDetail : async(id:number|string,type = 'a')=>{
+        try {
+            return (await axios.get(`${url}/${type}-posts/${id}`)).data;
+        } catch (err) {
+            console.error(err);
+            return err;
+        }
+    }
+
 }
