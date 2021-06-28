@@ -16,10 +16,11 @@ function App() {
       if ((e as never[]).length == 0 && !clear) return;
       else if (clear) {
         setlist([]);
-      } else {
+      } else if(list ===undefined||list?.length === 0||(list?.length as number)>=10){
 
         const temp = list ?? [];
-        setlist(clear ? e : temp.concat(e));
+        console.log((e as never[]).length)
+        setlist(clear ? (e as never[]) : temp.concat(e));
         setpage(_page + 1);
       }
     })
@@ -43,8 +44,9 @@ function App() {
     setsearch(e.target.value)
     setpage(0);
     moreShow(true, e.target.value);
-    console.log(e.target.value)
   };
+
+let forDupCheck:number = 0;
 
   const showDetail = (e:any) =>
 (
@@ -79,6 +81,7 @@ function App() {
       <hr />
       <div>
         <ul className = ''>
+
           {
 
             list?.map(
