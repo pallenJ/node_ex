@@ -59,9 +59,8 @@ function App() {
         moreShow(true,e.target.value);
         console.log(e.target.value)
       }}
-      onFocusCapture = {()=>{console.log('adg')}}
-      onEnded = {()=>{console.log('adg')}}
-      onInput = {()=>{console.log('gd')}}
+
+      onBlur = {()=>{console.log('sdf')}}
       />
       <hr/>
       <div>
