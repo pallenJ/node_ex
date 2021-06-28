@@ -40,10 +40,7 @@ function App() {
       moreShow();
     }
   };
-  const searchFnc = (val = search)=>{
-    setpage(0);
-    moreShow(true,val);
-  };
+
   //infiniteScroll();
   useEffect(() => {
     infiniteScroll();
