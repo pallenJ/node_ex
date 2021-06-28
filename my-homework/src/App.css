@@ -1,6 +1,4 @@
-.App {
-  text-align: center;
-}
+
 
 .App-logo {
   height: 40vmin;
@@ -23,11 +21,34 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
+li:hover{
+  background-color: beige;
+}
 .App-link {
   color: #61dafb;
 }
 
+.search {
+  width: 100%;
+  position: relative;
+  display: flex;
+}
+
+.searchTerm {
+  width: 100%;
+  border: 3px solid gold;
+  padding: 5px;
+  height: 20px;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  color: goldenrod;
+}
+.wrap{
+  width: 30%;
+  position: relative;
+  left: 35%;
+  right:35%
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -35,4 +56,42 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.pre{
+ /* background-color: #E6E6FA;*/
+  padding:10px;
+  text-overflow:ellipsis;
+  overflow: auto;
+  white-space: 'no-wrap';
+  display: -webkit-box;
+-webkit-line-clamp: 3;
+-webkit-box-orient: vertical;
+overflow: hidden;
+}
+.btn{
+  background-color: white;
+  border: none;
+  color: darkgoldenrod;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+.btn-selected{
+  background-color: gold;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+.btn:hover{
+  background-color: gray;
+}
+.btn:active{
+  background-color: gold;
 }
