@@ -68,8 +68,8 @@ function App() {
   }, [{ page }]);
   const Main = <div style = {{border:'1px solid black', padding:'50px'}}>
             <div className="wrap" >
-   <div className="search">
-      <input type="text" className="searchTerm" placeholder = 'Search...' onChange={searchFnc}/>
+   <div className="search ">
+      <input type="text" className="searchTerm" placeholder = '&#xF002; Search...' onChange={searchFnc} style={{fontFamily:'FontAwesome'}}/>
 
    </div>
 </div>
