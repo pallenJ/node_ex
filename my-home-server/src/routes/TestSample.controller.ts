@@ -1,6 +1,5 @@
 import StatusCodes from 'http-status-codes';
 import { Router,Request, Response } from 'express';
-const { BAD_REQUEST, CREATED, OK } = StatusCodes;
 import logger from '@shared/Logger';
 import TestSampleService from './../service/TestSample.service';
 const router = Router();
