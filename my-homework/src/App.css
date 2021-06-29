@@ -60,9 +60,9 @@ li:hover{
 
 .pre{
  /* background-color: #E6E6FA;*/
-  padding:10px;
   text-overflow:ellipsis;
   overflow: auto;
+  font-size: large;
   white-space: 'no-wrap';
   display: -webkit-box;
 -webkit-line-clamp: 3;
