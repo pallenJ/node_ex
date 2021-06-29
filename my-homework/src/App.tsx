@@ -13,7 +13,7 @@ function App() {
     const _page = clear ? 0 : page;
 
     service.getList({ page: _page, search: _search},_post).then(e => {
-      if ((e as never[]).length == 0 && !clear) return;
+      if ((e as never[]).length === 0 && !clear) return;
       else if (clear) {
         setlist([]);
       } else if(list ===undefined||list?.length === 0||(list?.length as number)>=10){
@@ -46,7 +46,7 @@ function App() {
     moreShow(true, e.target.value);
   };
 
-let forDupCheck:number = 0;
+
 
   const showDetail = (e:any) =>
 (
