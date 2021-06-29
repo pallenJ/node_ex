@@ -2,9 +2,10 @@ import mongoose, { Schema,model} from "mongoose";
 import autoIncrement from "mongoose-auto-increment"
 import dbInfo from "@infos/dbInfo.json"
 import bcrypt from 'bcrypt';
-const incre_connection = mongoose.createConnection(`${dbInfo.mongoDBUrl}/myHome`);
+const incre_connection = mongoose.createConnection(`${dbInfo.mongoDBUrl}/identity_testSample`);
 
 autoIncrement.initialize(incre_connection);
+
 let currentDate = new Date();
 const TestSampleSchema = new Schema({
     bno:{type:Number , defult:0},
@@ -15,7 +16,7 @@ const TestSampleSchema = new Schema({
     password:{type: String,required:true},
     salt:{type:String},
     history:{type:Array,default:[]}
-});
+}); 
 TestSampleSchema.pre('save',function(next){
     currentDate = new Date();
     const salt = bcrypt.genSaltSync(10);
@@ -30,6 +31,6 @@ TestSampleSchema.pre('updateOne',function (next) {
     this.set('editedAt',new Date());
     next();
 });
-
+ 
 TestSampleSchema.plugin(autoIncrement.plugin,{model: 'TestSample',field:'bno',startAt:0,unique:true,incrementBy:1});
-export default model('TestSample',TestSampleSchema,'testSample');
+export default model('TestSample',TestSampleSchema,'TestSample');

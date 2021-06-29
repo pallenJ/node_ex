@@ -67,6 +67,8 @@
     "@types/module-alias": "^2.0.0",
     "@types/mongoose": "^5.11.97",
     "@types/mongoose-auto-increment": "^5.0.34",
+    "@types/passport": "^1.0.6",
+    "@types/passport-local-mongoose": "^4.0.14",
     "bcrypt": "^5.0.1",
     "command-line-args": "^5.1.1",
     "cookie-parser": "^1.4.5",
@@ -82,7 +84,9 @@
     "module-alias": "^2.2.2",
     "mongoose": "^5.12.13",
     "mongoose-auto-increment": "^5.0.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "passport": "^0.4.1",
+    "passport-local-mongoose": "^6.1.0"
   },
   "devDependencies": {
     "@types/command-line-args": "^5.0.0",

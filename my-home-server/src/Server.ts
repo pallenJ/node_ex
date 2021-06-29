@@ -12,6 +12,9 @@ import mongoose  from 'mongoose';
 import dbInfo from '@infos/dbInfo.json';
 import cors from 'cors'
 
+import {UserConfig} from './passport'
+import passport from 'passport';
+
 const app = express();
 const { BAD_REQUEST } = StatusCodes;
 
@@ -20,10 +23,13 @@ const { BAD_REQUEST } = StatusCodes;
 /************************************************************************************
  *                              Set basic express settings
  ***********************************************************************************/
-
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
+
+UserConfig(passport);
+app.use(passport.initialize());
+app.use(passport.session());
 
 const options = {
     origin: '*',
@@ -41,6 +47,15 @@ if (process.env.NODE_ENV === 'development') {
 if (process.env.NODE_ENV === 'production') {
     app.use(helmet());
 }
+
+const connect = async()=>{
+    await mongoose.connect(`${dbInfo.mongoDBUrl}`,{
+    dbName:'myHome',
+    useNewUrlParser: true,
+    useCreateIndex: true,
+
+})}
+connect();
 
 // Add APIs
 app.use('/', BaseRouter);
@@ -67,14 +82,7 @@ app.use(express.static(staticDir)); */
 /* app.get('/', (req: Request, res: Response) => {
     res.sendFile('index.html', {root: viewsDir});
 }); */
-const connect = async()=>{
-    await mongoose.connect(`${dbInfo.mongoDBUrl}`,{
-    dbName:'myHome',
-    useNewUrlParser: true,
-    useCreateIndex: true,
 
-})}
-connect();
 
 //require('@daos/TestSample.dao');
 // Export express instance

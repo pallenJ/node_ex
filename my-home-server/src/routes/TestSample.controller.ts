@@ -18,6 +18,7 @@ router.post('/add',async(req:Request,res:Response)=>{
 });
 
 router.post('/addSamples',async(req:Request,res:Response)=>{
+  logger.info('aaa')
   try {
     const rs = await TestSampleService.sampleListCreate(req,res);
     return res.status(200).send(rs);

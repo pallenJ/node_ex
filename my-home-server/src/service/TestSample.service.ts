@@ -14,7 +14,6 @@ const parse = (val: any, init: number, valName = '') => {
         return init;
     }
 }
-
 const getList = async (params: any) => {
     const search = (params.search as string)||'';
     const keyword = (params.keyword as string)||'writer|content';
@@ -94,6 +93,7 @@ const TestSampleService = {
 
     , sampleListCreate: async (req: Request, res: Response) => {
         const limit = req.body.limit || (Math.floor(Math.random() * 100) + 200);
+        logger.info(limit);
         for (let index = 0; index < limit; index++) {
             await new TestSampleDao({ writer: `writer${index}`, content: `content${index}`, password: `jmp12#` }).save();
         }
