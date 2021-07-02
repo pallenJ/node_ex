@@ -1,6 +1,7 @@
 //import { getAllUsers, addOneUser, updateOneUser, deleteOneUser } from './Users';
 import { Router } from 'express';
 import TestSample from './TestSample.controller';
+import User from './User.controller';
 
 // User-route
 /*
@@ -15,4 +16,6 @@ userRouter.delete('/delete/:id', deleteOneUser);
 const baseRouter = Router();
 
 baseRouter.use('/testSample',TestSample );
+baseRouter.use('/user',User );
+
 export default baseRouter;

@@ -21,3 +21,4 @@ router.post('/join',(req:Request,res:Response,next:Function)=>{/*middleware */ n
             return res.status(500).send(error);
         }
     });
+export default router;
