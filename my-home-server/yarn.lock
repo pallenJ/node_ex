@@ -1849,6 +1849,11 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
+linq-typescript@^1.0.251:
+  version "1.0.251"
+  resolved "https://registry.yarnpkg.com/linq-typescript/-/linq-typescript-1.0.251.tgz#3aa8876a1bc06b66da7fb7add7e798bf8ce2055a"
+  integrity sha512-UnJ0drFTboOGzFngjbMHCXGTel/1dH+8N9PDmPoRH4e6FwpIRoHtUsNlVyXdg1/rzXXmuk+JDFJt5qddwCW0tg==
+
 lodash.camelcase@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
