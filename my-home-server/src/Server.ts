@@ -53,9 +53,9 @@ const connect = async()=>{
     dbName:'myHome',
     useNewUrlParser: true,
     useCreateIndex: true,
-
+    useUnifiedTopology: true,
 })}
-connect();
+connect().then().catch(error =>logger.err(error));
 
 // Add APIs
 app.use('/', BaseRouter);
